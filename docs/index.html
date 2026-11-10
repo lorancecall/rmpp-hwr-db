@@ -80,7 +80,12 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 <li><strong>준비물 확인</strong>
 reMarkable Paper Pro (개발자 모드 켜짐), PC (Windows, macOS, Linux), GitHub 계정, <a href="https://cli.github.com/">GitHub CLI(gh)</a>가 필요합니다. 터미널에서 <code>gh auth login</code>으로 한 번 로그인해 두세요.</li>
 <li><strong>rmpp-hwr 설치</strong>
-<a href="https://github.com/lorancecall/rmpp-hwr">rmpp-hwr</a> 안내에 따라 PC 도구 <code>hwr</code>를 설치하고 태블릿과 연결합니다.</li>
+태블릿에 <a href="https://github.com/lorancecall/rmpp-packages">rmpp-packages</a>의 <code>rmpp-preload</code>가 있어야 합니다 (<code>vellum add rmpp-preload</code>). 그다음 PC에서:
+<pre><code>git clone https://github.com/lorancecall/rmpp-hwr
+cd rmpp-hwr
+cp .env.example .env      # 태블릿 주소 입력
+tools/hwr install</code></pre>
+자세한 내용은 <a href="https://github.com/lorancecall/rmpp-hwr#install">rmpp-hwr 설치 안내</a>를 보세요. 태블릿 OS를 업데이트한 뒤에는 <code>tools/hwr install</code>을 한 번 더 실행합니다.</li>
 <li><strong>참여 신청 (동의)</strong>
 <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join.yml">참여 신청 양식</a>에서 동의 항목 5개를 확인하고 이슈를 엽니다. 자동으로 확인 댓글이 달리면 그 <b>이슈 번호</b>를 기억해 두세요.</li>
 <li><strong>연습 노트 받기</strong>
