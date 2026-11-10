@@ -1,0 +1,41 @@
+name: 참여 신청 (데이터 기여 동의)
+description: rmpp-hwr 손글씨 공개 데이터셋에 손글씨를 기여하기 위한 신청과 동의
+title: "[참여] 손글씨 데이터 기여"
+labels: ["join"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        reMarkable Paper Pro에서 쓴 손글씨(펜 획 데이터)를 한국어·영어·숫자 손글씨 인식용 **공개 데이터셋**으로 기여하기 위한 신청입니다.
+        자세한 안내: https://lorancecall.github.io/rmpp-hwr-db/
+
+        이 이슈는 **공개**됩니다. 아래 칸에 이름, 연락처 같은 개인 정보는 적지 마세요.
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: 동의 사항 (모두 확인해야 참여할 수 있습니다)
+      options:
+        - label: 제출하는 손글씨 데이터가 CC BY 4.0 라이선스로 공개되어, 출처를 밝히면 누구나 (상업적 이용을 포함해) 사용·수정·재배포할 수 있다는 데 동의합니다.
+          required: true
+        - label: 연습 페이지에 인쇄된 문장만 따라 썼고, 이름·연락처·주소 같은 개인 정보는 쓰지 않았습니다 (쓴 페이지는 제출하지 않습니다).
+          required: true
+        - label: 데이터에는 무작위 작성자 ID만 들어가지만, 이 이슈와 Pull Request를 연 GitHub 계정은 공개된다는 점을 이해합니다.
+          required: true
+        - label: 만 14세 이상입니다.
+          required: true
+        - label: 철회를 요청하면 이후 버전에서 제 데이터가 삭제되지만, 이미 공개된 이전 버전과 다른 사람이 받아 간 사본은 회수할 수 없다는 점을 이해합니다.
+          required: true
+  - type: dropdown
+    id: hand
+    attributes:
+      label: 주로 쓰는 손 (선택, 공개됨)
+      options: ["응답 안 함", "오른손", "왼손", "양손"]
+    validations:
+      required: false
+  - type: dropdown
+    id: age
+    attributes:
+      label: 연령대 (선택, 공개됨)
+      options: ["응답 안 함", "10대", "20대", "30대", "40대", "50대", "60대 이상"]
+    validations:
+      required: false

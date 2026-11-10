@@ -1,0 +1,68 @@
+name: Publish (web page, Hugging Face mirror)
+
+# On every merge to main: statistics -> GitHub Pages site (docs/), and a mirror of the data on the
+# Hugging Face Hub when the HF_TOKEN secret is set (dataset id: repository variable HF_DATASET_REPO,
+# default lorancecall/rmpp-hwr-db).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          python scripts/validate.py --all
+          mkdir -p site && cp -r docs/. site/ && python scripts/stats.py > site/stats.json && cat site/stats.json
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  huggingface:
+    runs-on: ubuntu-latest
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_DATASET_REPO: ${{ vars.HF_DATASET_REPO || 'lorancecall/rmpp-hwr-db' }}
+    steps:
+      - uses: actions/checkout@v4
+        if: env.HF_TOKEN != ''
+      - uses: actions/setup-python@v5
+        if: env.HF_TOKEN != ''
+        with:
+          python-version: "3.12"
+      - name: Mirror to the Hugging Face Hub
+        if: env.HF_TOKEN != ''
+        run: |
+          pip install -q "huggingface_hub>=0.25"
+          python - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          repo = os.environ["HF_DATASET_REPO"]
+          api.create_repo(repo, repo_type="dataset", exist_ok=True)
+          api.upload_file(path_or_fileobj="docs/hf-README.md", path_in_repo="README.md", repo_id=repo, repo_type="dataset")
+          api.upload_folder(folder_path=".", repo_id=repo, repo_type="dataset",
+                            allow_patterns=["writers/**", "LICENSE", "FORMAT.md"], delete_patterns=["writers/**"],
+                            commit_message=f"Mirror of {os.environ['GITHUB_SHA'][:7]}")
+          PY
+      - if: env.HF_TOKEN == ''
+        run: echo "HF_TOKEN secret not set; skipping the Hugging Face mirror"
