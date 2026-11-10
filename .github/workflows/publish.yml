@@ -37,32 +37,40 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v4
 
+  # Hugging Face mirror. Turn it on by setting the repository variable HF_DATASET_REPO (e.g. yourname/rmpp-hwr-db)
+  # after creating that dataset on the Hub and adding this workflow as its Trusted Publisher (dataset Settings >
+  # Trusted Publishers: GitHub Actions, repository lorancecall/rmpp-hwr-db, branch main, workflow publish.yml).
+  # No token is stored: the job exchanges its GitHub OIDC token for a 1-hour token scoped to that one dataset.
+  # (An HF_TOKEN secret, if set, is used instead.)
   huggingface:
+    if: vars.HF_DATASET_REPO != ''
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # lets the job request a GitHub OIDC token for the exchange
+      contents: read
     env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      HF_DATASET_REPO: ${{ vars.HF_DATASET_REPO || 'lorancecall/rmpp-hwr-db' }}
+      HF_DATASET_REPO: ${{ vars.HF_DATASET_REPO }}
+      HF_OIDC_RESOURCE: datasets/${{ vars.HF_DATASET_REPO }}
     steps:
       - uses: actions/checkout@v4
-        if: env.HF_TOKEN != ''
       - uses: actions/setup-python@v5
-        if: env.HF_TOKEN != ''
         with:
           python-version: "3.12"
       - name: Mirror to the Hugging Face Hub
-        if: env.HF_TOKEN != ''
+        env:
+          HF_TOKEN_SECRET: ${{ secrets.HF_TOKEN }}
         run: |
-          pip install -q "huggingface_hub>=0.25"
+          pip install -q "huggingface_hub>=1.19.0"
+          if [ -n "$HF_TOKEN_SECRET" ]; then export HF_TOKEN="$HF_TOKEN_SECRET"; else export HF_TOKEN="$(hf auth token)"; fi
           python - <<'PY'
           import os
           from huggingface_hub import HfApi
           api = HfApi(token=os.environ["HF_TOKEN"])
           repo = os.environ["HF_DATASET_REPO"]
-          api.create_repo(repo, repo_type="dataset", exist_ok=True)
-          api.upload_file(path_or_fileobj="docs/hf-README.md", path_in_repo="README.md", repo_id=repo, repo_type="dataset")
+          api.upload_file(path_or_fileobj="docs/hf-README.md", path_in_repo="README.md", repo_id=repo, repo_type="dataset",
+                          commit_message="Dataset card")
           api.upload_folder(folder_path=".", repo_id=repo, repo_type="dataset",
                             allow_patterns=["writers/**", "LICENSE", "FORMAT.md"], delete_patterns=["writers/**"],
                             commit_message=f"Mirror of {os.environ['GITHUB_SHA'][:7]}")
+          print(f"mirrored to https://huggingface.co/datasets/{repo}")
           PY
-      - if: env.HF_TOKEN == ''
-        run: echo "HF_TOKEN secret not set; skipping the Hugging Face mirror"
