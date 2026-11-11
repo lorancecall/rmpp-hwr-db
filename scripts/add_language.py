@@ -8,7 +8,7 @@ with a translation (keep the structure, the ids and the <script>). English stays
 """
 import argparse
 import json
-import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,13 +16,15 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("code", help="ISO 639-1 code, lowercase (zh-hant style allowed)")
+    ap.add_argument("code", help="ISO 639-1 code (two lowercase letters) or a variant listed in scripts/languages.py")
     ap.add_argument("name", help="English name, e.g. Japanese")
     ap.add_argument("native", help="the language's own name, e.g. 日本語")
     ap.add_argument("--mix", help="languages a practice notebook mixes (default: CODE,en,digits)")
     a = ap.parse_args()
-    if not re.fullmatch(r"[a-z]{2,3}(-[a-z]{2,4})?", a.code):
-        raise SystemExit(f"bad language code: {a.code}")
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import languages
+    if not languages.valid(a.code):
+        raise SystemExit(f"{a.code} is not an ISO 639-1 code (or a known variant such as zh-hant)")
     lf = ROOT / "languages.json"
     langs = json.loads(lf.read_text(encoding="utf-8"))
     if a.code in langs:

@@ -1,0 +1,37 @@
+name: Language request check
+
+# An "Add a language" issue: read the language code from the form, check it (ISO 639-1, scripts/languages.py),
+# label the issue lang:<code> and reply. The maintainer then runs scripts/add_language.py.
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    if: contains(github.event.issue.labels.*.name, 'language-request')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - id: check
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: python scripts/languages.py check-issue
+      - name: Label and reply
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CODE: ${{ steps.check.outputs.code }}
+          COMMENT: ${{ steps.check.outputs.comment }}
+          NUM: ${{ github.event.issue.number }}
+        run: |
+          if [ -n "$CODE" ]; then
+            gh label create "lang:$CODE" -R "$GITHUB_REPOSITORY" --color C5DEF5 2>/dev/null || true
+            gh issue edit "$NUM" -R "$GITHUB_REPOSITORY" --add-label "lang:$CODE"
+          fi
+          gh issue comment "$NUM" -R "$GITHUB_REPOSITORY" --body "$COMMENT"

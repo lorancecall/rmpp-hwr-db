@@ -11,20 +11,44 @@ body:
         This issue is **public**: do not write personal information.
 
         노트는 **내 언어 + 영어 + 숫자**를 함께 연습하고, 언어마다 `data/<코드>/` 폴더가 따로 있습니다. 이 이슈는 공개됩니다.
-  - type: input
+  - type: dropdown
     id: language
     attributes:
-      label: Language (English name and its own name) / 언어 이름
-      placeholder: "Japanese / 日本語"
+      label: Language / 언어
+      description: Korean (ko) and English (en) are supported already. / 한국어와 영어는 이미 지원합니다.
+      options:
+        - "Japanese / 日本語 (ja)"
+        - "Chinese, Simplified / 简体中文 (zh)"
+        - "Chinese, Traditional / 繁體中文 (zh-hant)"
+        - "Russian / Русский (ru)"
+        - "Ukrainian / Українська (uk)"
+        - "German / Deutsch (de)"
+        - "French / Français (fr)"
+        - "Spanish / Español (es)"
+        - "Portuguese / Português (pt)"
+        - "Italian / Italiano (it)"
+        - "Dutch / Nederlands (nl)"
+        - "Polish / Polski (pl)"
+        - "Swedish / Svenska (sv)"
+        - "Turkish / Türkçe (tr)"
+        - "Greek / Ελληνικά (el)"
+        - "Vietnamese / Tiếng Việt (vi)"
+        - "Thai / ไทย (th)"
+        - "Indonesian / Bahasa Indonesia (id)"
+        - "Hindi / हिन्दी (hi)"
+        - "Arabic / العربية (ar)"
+        - "Hebrew / עברית (he)"
+        - "Other (code below) / 기타"
     validations:
       required: true
   - type: input
-    id: code
+    id: other
     attributes:
-      label: Language code (ISO 639-1, e.g. ja, zh, de) / 언어 코드
-      placeholder: ja
+      label: Only for Other - ISO 639-1 code and name / 기타일 때만 - 언어 코드와 이름
+      description: Two lowercase letters (https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes), then the name. A bot checks the code.
+      placeholder: "ka Georgian / ქართული"
     validations:
-      required: true
+      required: false
   - type: textarea
     id: script
     attributes:
