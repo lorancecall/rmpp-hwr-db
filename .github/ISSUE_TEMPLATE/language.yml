@@ -1,0 +1,60 @@
+name: Add a language / 언어 추가 요청
+description: Ask for practice pages and a data folder for another language (언어 추가 요청)
+title: "[language] "
+labels: ["language-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every notebook practises **your language + English + digits** (for English writers: English + digits), and
+        each language has its own folder `data/<code>/`. Supported now: see [languages.json](../blob/main/languages.json).
+        This issue is **public**: do not write personal information.
+
+        노트는 **내 언어 + 영어 + 숫자**를 함께 연습하고, 언어마다 `data/<코드>/` 폴더가 따로 있습니다. 이 이슈는 공개됩니다.
+  - type: input
+    id: language
+    attributes:
+      label: Language (English name and its own name) / 언어 이름
+      placeholder: "Japanese / 日本語"
+    validations:
+      required: true
+  - type: input
+    id: code
+    attributes:
+      label: Language code (ISO 639-1, e.g. ja, zh, de) / 언어 코드
+      placeholder: ja
+    validations:
+      required: true
+  - type: textarea
+    id: script
+    attributes:
+      label: Writing system / 문자 체계
+      description: |
+        Which characters should the practice pages cover? One character per grid cell works for scripts like
+        Hangul, kana or Chinese characters; Latin-script languages use English-style four-line rows.
+        연습 페이지에 들어갈 문자 (예: 히라가나·가타카나·상용 한자 2,136자).
+    validations:
+      required: true
+  - type: textarea
+    id: texts
+    attributes:
+      label: Practice texts / 연습 문장 출처
+      description: |
+        Where can sentences to copy come from? They must be public domain or openly licensed (CC0, CC BY, ...):
+        give links. You can also attach your own sentences if you agree to release them under CC BY 4.0.
+        따라 쓸 문장의 출처 (퍼블릭 도메인이나 공개 라이선스, 링크 포함).
+    validations:
+      required: true
+  - type: checkboxes
+    id: writer
+    attributes:
+      label: Contributing / 참여
+      options:
+        - label: I have a reMarkable Paper Pro and would write practice pages in this language. / 이 언어로 연습 페이지를 쓸 수 있습니다.
+          required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / 기타
+    validations:
+      required: false

@@ -23,6 +23,7 @@ Korean, English and digit handwriting written on the reMarkable Paper Pro, on st
 This is a read-only mirror of https://github.com/lorancecall/rmpp-hwr-db, updated on every merge.
 Contribution guide (Korean): https://lorancecall.github.io/rmpp-hwr-db/
 
-- Format: `FORMAT.md` (`writers/<uuid>/<session>/page-NN.json`)
+- Format: `FORMAT.md` (`data/<language>/<uuid>/<session>/page-NN.json`; languages in `languages.json`: `ko` =
+  Korean + English + digits, `en` = English + digits)
 - Privacy: random writer ids only; no names, accounts, devices, document ids or timestamps.
 - License: CC BY 4.0. Please credit "rmpp-hwr-db contributors".

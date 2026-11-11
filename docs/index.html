@@ -67,6 +67,10 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 </table>
 <p>칸마다 어떤 글자를 썼는지 알기 때문에 글자 단위로도, 줄 단위로도 학습에 쓸 수 있습니다.</p>
 
+<h2 id="languages">언어</h2>
+<p>노트 하나는 <b>내 언어 + 영어 + 숫자</b>를 함께 연습합니다 (영어 사용자는 영어 + 숫자). 데이터도 언어마다 <code>data/&lt;언어 코드&gt;/</code> 폴더에 따로 모입니다. 지금은 <b>한국어(ko)</b>와 <b>영어(en)</b>를 지원합니다 (<a href="https://github.com/lorancecall/rmpp-hwr-db/blob/main/languages.json">languages.json</a>).</p>
+<p>다른 언어로 참여하고 싶다면 <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml">언어 추가 요청 양식</a>으로 알려 주세요. 연습 문장(퍼블릭 도메인이나 공개 라이선스)과 문자 범위가 정해지면 그 언어의 연습 페이지와 폴더를 만듭니다.</p>
+
 <h2>개인정보</h2>
 <ul>
 <li>데이터에는 <b>무작위 작성자 ID</b>, 연습 템플릿, 펜 획만 들어갑니다. 이름, 계정, 기기 정보, 문서 이름, 작성 시각은 들어가지 않습니다.</li>
@@ -89,8 +93,9 @@ tools/hwr install</code></pre>
 <li><strong>참여 신청 (동의)</strong>
 <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join.yml">참여 신청 양식</a>에서 동의 항목 5개를 확인하고 이슈를 엽니다. 자동으로 확인 댓글이 달리면 그 <b>이슈 번호</b>를 기억해 두세요.</li>
 <li><strong>연습 노트 받기</strong>
-<pre><code>hwr practice --v2</code></pre>
-태블릿에 <code>rmpp-practice-v2-…</code> 노트(8페이지)가 생깁니다.</li>
+<pre><code>hwr practice --v2              # 한국어 + 영어 + 숫자
+hwr practice --v2 --lang en    # 영어 + 숫자</code></pre>
+태블릿의 <code>hwr-db</code> 폴더에 <code>rmpp-practice-v2-…</code> 노트(8페이지)가 생깁니다. 언어는 <code>.env</code>의 <code>HWR_LANG</code>으로 정해 둘 수도 있습니다.</li>
 <li><strong>쓰기</strong>
 각 페이지 위의 안내대로 씁니다. 칸에는 한 글자씩, 칸 밖으로 크게 넘치지 않게 씁니다. <b>평소 글씨체 그대로</b> 쓰는 것이 가장 좋습니다. 틀린 글자는 지우개로 지우고 다시 쓰면 됩니다.</li>
 <li><strong>가져오기와 검사</strong>
