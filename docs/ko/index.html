@@ -62,9 +62,10 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 .panel p { margin: 6px 0; }
 .panel .small { color: var(--muted); font-size: 0.88rem; }
 .panel ol { margin: 8px 0 0; padding-left: 22px; }
-.panel input { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
+.panel input[type="checkbox"] { margin: 6px 0 0; flex: none; accent-color: var(--accent); }
+.panel input[type="text"] { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
   padding: 9px 12px; width: 100%; max-width: 420px; }
-.panel input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.panel input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
 .panel label { display: block; font-weight: 600; margin: 10px 0 6px; }
 </style>
 </head>

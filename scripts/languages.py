@@ -70,13 +70,13 @@ def tier(code):
 
 
 def parse_request(body):
-    """-> (code, name, native) from the form: dropdown 'Name / Native (code)', else the text field
-    'code Name / Native' (the dropdown is optional: the site prefills the text field)."""
+    """-> (code, name, native) from the issue: 'Name / Native (code)' or 'Name (code)' under Language (the form's
+    dropdown, or the site's request form), else 'code Name / Native' under Other language."""
     choice = answer(body, "Language")
     other = answer(body, "Other language") or answer(body, "Only for Other")    # label before the site flow
-    m = re.match(r"\s*(.+?)\s*/\s*(.+?)\s*\(([a-z]{2}(?:-[a-z]{2,4})?)\)\s*$", choice)
+    m = re.match(r"\s*(.+?)\s*(?:/\s*(.+?))?\s*\(([a-z]{2}(?:-[a-z]{2,4})?)\)\s*$", choice)
     if m:
-        return m.group(3), m.group(1), m.group(2)
+        return m.group(3), m.group(1), m.group(2) or m.group(1)
     m = re.match(r"\s*([A-Za-z-]+)\s+(.+?)\s*(?:/\s*(.+?))?\s*$", other)
     if m:
         return m.group(1).lower(), m.group(2), m.group(3) or m.group(2)
