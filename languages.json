@@ -1,4 +1,4 @@
 {
- "ko": {"name": "Korean", "native": "한국어", "mix": ["ko", "en", "digits"]},
- "en": {"name": "English", "native": "English", "mix": ["en", "digits"]}
+ "en": {"name": "English", "native": "English", "mix": ["en", "digits"], "page": ""},
+ "ko": {"name": "Korean", "native": "한국어", "mix": ["ko", "en", "digits"], "page": "ko/"}
 }
