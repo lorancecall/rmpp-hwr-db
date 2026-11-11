@@ -1,24 +1,28 @@
-name: 참여 철회 / 데이터 삭제 요청
-description: 기여한 손글씨 데이터를 데이터셋에서 빼 달라는 요청
-title: "[철회] 데이터 삭제 요청"
+name: Withdraw / 참여 철회 (데이터 삭제)
+description: Ask for your handwriting data to be removed from the dataset / 기여한 손글씨 데이터 삭제 요청
+title: "[withdraw] remove my data"
 labels: ["withdraw"]
 body:
   - type: markdown
     attributes:
       value: |
+        Use the **same GitHub account** as your join issue. Your writer id is in `hwr-data/writer.json` on your
+        computer. Removal applies from the next version; published earlier versions and copies others downloaded
+        cannot be recalled.
+
         참여 신청 이슈를 연 **같은 GitHub 계정**으로 요청해 주세요. 작성자 ID는 PC의 `hwr-data/writer.json`에 있습니다.
-        삭제는 다음 버전부터 적용됩니다. 이미 공개된 이전 버전과 다른 사람이 받아 간 사본은 회수할 수 없습니다.
+        삭제는 다음 버전부터 적용되며, 이미 공개된 이전 버전과 다른 사람이 받아 간 사본은 회수할 수 없습니다.
   - type: input
     id: consent_issue
     attributes:
-      label: 참여 신청 이슈 번호
-      placeholder: "예: 12"
+      label: Number of your join issue / 참여 신청 이슈 번호
+      placeholder: "e.g. 12"
     validations:
       required: true
   - type: input
     id: writer
     attributes:
-      label: 작성자 ID 앞 8자리
-      placeholder: "예: 3f2a9c1b"
+      label: First 8 characters of your writer id / 작성자 ID 앞 8자리
+      placeholder: "e.g. 3f2a9c1b"
     validations:
       required: true

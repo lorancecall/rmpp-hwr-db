@@ -30,7 +30,7 @@ jobs:
           python-version: "3.12"
       - run: |
           python scripts/validate.py --all
-          mkdir -p site && cp -r docs/. site/ && python scripts/stats.py > site/stats.json && cat site/stats.json
+          mkdir -p site && cp -r docs/. site/ && cp languages.json site/ && python scripts/stats.py > site/stats.json && cat site/stats.json
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
