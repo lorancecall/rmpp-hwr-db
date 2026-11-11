@@ -32,32 +32,79 @@ def answer(body, heading):
     return "" if v == "_No response_" else v
 
 
-def check_issue(body):
-    """-> (code or None, comment). Code from the dropdown '... (xx)' or, for Other, the first word of the input."""
-    known = json.loads((ROOT / "languages.json").read_text(encoding="utf-8"))
+# Support tiers for a requested language (what rmpp-hwr can do with it, and what is missing).
+TIER_A = {"ko", "en"}                                  # recognition model + ink font + keyboard work now
+PADDLE = {  # PaddleOCR recognition models exist (printed text; handwriting needs fine-tuning on practice data)
+    "ja", "zh", "zh-hant", "ru", "uk", "be", "bg", "sr", "mk", "kk", "ky", "tg", "mn", "ar", "fa", "ur", "ug", "hi",
+    "mr", "ne", "sa", "ta", "te", "kn", "ka", "el", "th",
+    "de", "fr", "es", "pt", "it", "nl", "pl", "sv", "da", "no", "nb", "nn", "fi", "is", "cs", "sk", "sl", "hr", "bs",
+    "hu", "ro", "et", "lv", "lt", "tr", "az", "uz", "vi", "id", "ms", "tl", "sw", "af", "ga", "cy", "eu", "ca", "gl",
+    "la", "eo", "sq", "mt", "oc", "rm", "lb", "fo", "mi", "so", "ku"}
+LAYOUT = {  # ink/text layout needs work: right-to-left, or shaped scripts (glyphs are placed one by one today)
+    "ar", "fa", "ur", "ug", "ps", "sd", "ku", "he", "yi", "dv", "hi", "mr", "ne", "sa", "bn", "as", "pa", "gu", "or",
+    "ta", "te", "kn", "ml", "si", "th", "lo", "km", "my", "bo", "dz"}
+IME = {"ja", "zh", "zh-hant"}                          # typing needs a conversion input method (rmpp-lang)
+
+
+def tier(code):
+    """One-paragraph support summary (English / Korean) for the issue reply."""
+    if code in TIER_A:
+        return "Tier A: works now (recognition, ink, keyboard). / A: 지금 바로 동작합니다."
+    parts = []
+    if code in PADDLE:
+        parts.append("Tier B: a base recognition model exists; it learns handwriting from the practice pages people "
+                     "write. / B: 기본 인식 모델이 있고, 연습 페이지 손글씨로 학습시킵니다.")
+    else:
+        parts.append("No base recognition model yet: a new one is trained from the collected pages. / "
+                     "기본 인식 모델이 없어 모인 페이지로 새로 학습해야 합니다.")
+    if code in LAYOUT:
+        parts.append("Tier C: right-to-left or shaped script, so converting to ink/text needs layout work. / "
+                     "C: 오른쪽에서 왼쪽 또는 글자 모양이 바뀌는 문자라 잉크·텍스트 배치 작업이 필요합니다.")
+    parts.append("Typing: needs a conversion input method in rmpp-lang. / 입력: rmpp-lang에 변환 입력기가 필요합니다."
+                 if code in IME else
+                 "Typing: needs a keyboard layout add-on in rmpp-lang. / 입력: rmpp-lang 키보드 배열 add-on이 필요합니다.")
+    return "\n".join("- " + p for p in parts)
+
+
+def parse_request(body):
+    """-> (code, name, native) from the form: dropdown 'Name / Native (code)' or Other 'code Name / Native'."""
     choice = answer(body, "Language")
     other = answer(body, "Only for Other")
-    m = re.search(r"\(([a-z]{2}(?:-[a-z]{2,4})?)\)\s*$", choice)
-    code = m.group(1) if m else (other.split()[0].lower() if other.split() else "")
+    m = re.match(r"\s*(.+?)\s*/\s*(.+?)\s*\(([a-z]{2}(?:-[a-z]{2,4})?)\)\s*$", choice)
+    if m:
+        return m.group(3), m.group(1), m.group(2)
+    m = re.match(r"\s*([A-Za-z-]+)\s+(.+?)\s*(?:/\s*(.+?))?\s*$", other)
+    if m:
+        return m.group(1).lower(), m.group(2), m.group(3) or m.group(2)
+    return "", "", ""
+
+
+def check_issue(body):
+    """-> (code or None, name, native, comment, new). new = the language is not registered yet."""
+    known = json.loads((ROOT / "languages.json").read_text(encoding="utf-8"))
+    code, name, native = parse_request(body)
     if not code:
-        return None, ("Please pick a language, or choose Other and write its ISO 639-1 code (two lowercase letters) "
-                      "and name. / 언어를 고르거나, 기타를 고르고 ISO 639-1 코드(소문자 두 글자)와 이름을 적어 주세요.")
+        return None, "", "", ("Please pick a language, or choose Other and write its ISO 639-1 code (two lowercase "
+                               "letters), English name and own name, e.g. `ka Georgian / ქართული`. / 언어를 고르거나, "
+                               "기타를 고르고 코드, 영어 이름, 자기 언어 이름을 적어 주세요."), False
     if not valid(code):
-        return None, (f"`{code}` is not an ISO 639-1 code (two lowercase letters, "
-                      "https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes). Please edit the issue. / "
-                      f"`{code}`는 ISO 639-1 코드가 아닙니다. 이슈를 고쳐 주세요.")
+        return None, "", "", (f"`{code}` is not an ISO 639-1 code (two lowercase letters, "
+                               "https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes). Please edit the issue. / "
+                               f"`{code}`는 ISO 639-1 코드가 아닙니다. 이슈를 고쳐 주세요."), False
     if code in known:
-        return code, (f"`{code}` ({known[code].get('name')}) is supported already: "
-                      f"https://lorancecall.github.io/rmpp-hwr-db/{known[code].get('page', '')} / 이미 지원하는 언어입니다.")
-    return code, (f"Thanks! Requested language code: `{code}`. A maintainer will review the characters and the practice "
-                  f"texts. / 요청 언어 코드: `{code}`. 관리자가 문자 범위와 연습 문장을 검토합니다.")
+        return code, name, native, (f"`{code}` ({known[code].get('name')}) is supported already: "
+                                    f"https://lorancecall.github.io/rmpp-hwr-db/{known[code].get('page', '')} / "
+                                    "이미 지원하는 언어입니다.\n\n" + tier(code)), False
+    return code, name, native, (f"Thanks! Requested: **{name} / {native}** (`{code}`). A pull request adds its page and "
+                                "entry; practice texts follow after review. / 요청 언어의 페이지와 항목을 PR로 추가하고, "
+                                "연습 문장은 검토 후 이어집니다.\n\n" + tier(code)), True
 
 
 if __name__ == "__main__":
     if sys.argv[1:] == ["check-issue"]:
-        code, comment = check_issue(os.environ.get("ISSUE_BODY", ""))
+        code, name, native, comment, new = check_issue(os.environ.get("ISSUE_BODY", ""))
         with open(os.environ.get("GITHUB_OUTPUT", os.devnull), "a", encoding="utf-8") as f:
-            f.write(f"code={code or ''}\n")
+            f.write(f"code={code or ''}\nname={name}\nnative={native}\nnew={'1' if new else ''}\n")
             f.write("comment<<EOF\n" + comment + "\nEOF\n")
         print(code, comment)
     else:
