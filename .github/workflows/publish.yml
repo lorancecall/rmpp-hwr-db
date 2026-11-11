@@ -70,7 +70,8 @@ jobs:
           api.upload_file(path_or_fileobj="docs/hf-README.md", path_in_repo="README.md", repo_id=repo, repo_type="dataset",
                           commit_message="Dataset card")
           api.upload_folder(folder_path=".", repo_id=repo, repo_type="dataset",
-                            allow_patterns=["writers/**", "LICENSE", "FORMAT.md"], delete_patterns=["writers/**"],
+                            allow_patterns=["data/**", "languages.json", "LICENSE", "FORMAT.md"],
+                            delete_patterns=["writers/**", "data/**"],
                             commit_message=f"Mirror of {os.environ['GITHUB_SHA'][:7]}")
           print(f"mirrored to https://huggingface.co/datasets/{repo}")
           PY

@@ -6,6 +6,7 @@ reMarkable Paper Pro에서 쓴 **한국어·영어·숫자 손글씨 공개 데�
 
 - **참여 안내 (한국어)**: https://lorancecall.github.io/rmpp-hwr-db/
 - **참여 신청**: [이슈 양식](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join.yml)
+- **언어**: 노트는 내 언어 + 영어 + 숫자를 함께 연습하고, 데이터는 언어별 폴더 `data/<언어 코드>/`에 모입니다. 지금은 한국어(`ko`)와 영어(`en`) ([languages.json](languages.json)). 다른 언어는 [언어 추가 요청](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml)으로 알려 주세요.
 - **데이터 형식**: [FORMAT.md](FORMAT.md)
 - **Hugging Face 미러**: https://huggingface.co/datasets/lorancecall/rmpp-hwr-db
 
@@ -25,4 +26,6 @@ reMarkable Paper Pro에서 쓴 **한국어·영어·숫자 손글씨 공개 데�
 pages are structured practice sheets with per-character cells, and the data is stored as pen strokes. Contributors join
 through the consent issue form and submit pages with `hwr contribute` from
 [rmpp-hwr](https://github.com/lorancecall/rmpp-hwr). The data carries only random writer ids, no personal data.
+Data is grouped by language (`data/<code>/`; each notebook practises the writer's language + English + digits);
+ask for another language with the ["Add a language" form](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml).
 License: CC BY 4.0. Format: [FORMAT.md](FORMAT.md).
