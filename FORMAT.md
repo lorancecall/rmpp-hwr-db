@@ -3,9 +3,14 @@
 One JSON file per handwritten page:
 
 ```
-writers/<writer uuid>/writer.json
-writers/<writer uuid>/<session>/page-NN.json
+data/<language>/<writer uuid>/writer.json
+data/<language>/<writer uuid>/<session>/page-NN.json
 ```
+
+- **language**: the writer's language, a code listed in [`languages.json`](languages.json) (`ko`, `en`, ...). A
+  practice notebook mixes it with English and digits (`mix` in `languages.json`: `ko` = Korean + English +
+  digits, `en` = English + digits); its pages go to the folder of its first language. A writer who writes in
+  two languages has a folder (and a `writer.json`) in each. New languages: the "Add a language" issue form.
 
 - **writer uuid**: random UUID made once on the contributor's PC (`hwr-data/writer.json`). It is not derived from
   any account, device or name.
@@ -26,7 +31,7 @@ writers/<writer uuid>/<session>/page-NN.json
 |---|---|
 | `format` | `rmpp-hwr-db/page@1` |
 | `writer`, `session`, `page` | as in the path |
-| `template` | the practice template: `format` (`rmpp-hwr/practice@2`), `page_px` [1620, 2160], `dpi` 229, `seed`, `page_kinds`, `page_kind` of this page |
+| `template` | the practice template: `format` (`rmpp-hwr/practice@2`), `page_px` [1620, 2160], `dpi` 229, `seed`, `page_kinds`, `page_kind` of this page, `languages` (the mix, e.g. `["ko", "en", "digits"]`; pages made before mixes existed have no `languages` and are Korean + English + digits) |
 | `items` | what was printed on the page: rows of cells (`kind: row`, `cells: [{char, box}]`) or lines (`kind: line`, `guides`), each with `text`, `layout` (`grid`, `digits`, `english`, `free`), `size` (`S`, `M`, `L`), `box`, optional `speed` (`fast`) |
 | `assign` | which strokes belong to each item (`strokes`: indices into `strokes`) and, for rows, to each cell (`cells`: list of index lists) |
 | `strokes` | pen strokes in writing order: `tool` (reMarkable pen type) and `points` `[x, y, pressure, width, speed]` |
