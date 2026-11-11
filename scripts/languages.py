@@ -52,14 +52,17 @@ def tier(code):
         return "Tier A: works now (recognition, ink, keyboard). / A: 지금 바로 동작합니다."
     parts = []
     if code in PADDLE:
-        parts.append("Tier B: a base recognition model exists; it learns handwriting from the practice pages people "
-                     "write. / B: 기본 인식 모델이 있고, 연습 페이지 손글씨로 학습시킵니다.")
+        parts.append("Recognition, tier B: a base recognition model exists; it learns handwriting from the practice "
+                     "pages people write. / 인식 B: 기본 인식 모델이 있고, 연습 페이지 손글씨로 학습시킵니다.")
     else:
-        parts.append("No base recognition model yet: a new one is trained from the collected pages. / "
-                     "기본 인식 모델이 없어 모인 페이지로 새로 학습해야 합니다.")
+        parts.append("Recognition: no base model yet; a new one is trained from the collected pages. / "
+                     "인식: 기본 모델이 없어 모인 페이지로 새로 학습해야 합니다.")
     if code in LAYOUT:
-        parts.append("Tier C: right-to-left or shaped script, so converting to ink/text needs layout work. / "
-                     "C: 오른쪽에서 왼쪽 또는 글자 모양이 바뀌는 문자라 잉크·텍스트 배치 작업이 필요합니다.")
+        parts.append("Ink, tier C: right-to-left or shaped script; ink places glyphs one by one, so it needs layout "
+                     "(shaping) work. / 잉크 C: 오른쪽에서 왼쪽 또는 글자 모양이 바뀌는 문자라 배치(셰이핑) 작업이 필요합니다.")
+    else:
+        parts.append("Ink: needs a glyph file for this language, made from the font rmpp-lang sets for it. / "
+                     "잉크: rmpp-lang이 정한 글꼴로 이 언어의 글리프 파일을 만들어야 합니다.")
     parts.append("Typing: needs a conversion input method in rmpp-lang. / 입력: rmpp-lang에 변환 입력기가 필요합니다."
                  if code in IME else
                  "Typing: needs a keyboard layout add-on in rmpp-lang. / 입력: rmpp-lang 키보드 배열 add-on이 필요합니다.")
