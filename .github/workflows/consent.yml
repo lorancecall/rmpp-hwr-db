@@ -21,6 +21,13 @@ jobs:
             const checked = (body.match(/- \[[xX]\]/g) || []).length;
             const num = context.payload.issue.number;
             const labels = context.payload.issue.labels.map(l => l.name);
+            // Language of the join form ("... (code)" under "Language you write"): label lang:<code>. The
+            // per-language forms carry that label already, but a template label is dropped when it does not exist.
+            const lang = (body.match(/^###\s*Language you write[^\n]*\n\s*\n[^\n]*\(([a-z]{2}(?:-[a-z]{2,4})?)\)\s*$/m) || [])[1];
+            if (lang && !labels.includes(`lang:${lang}`)) {
+              try { await github.rest.issues.createLabel({ ...context.repo, name: `lang:${lang}`, color: "C5DEF5" }); } catch (e) {}
+              await github.rest.issues.addLabels({ ...context.repo, issue_number: num, labels: [`lang:${lang}`] });
+            }
             if (checked >= 5 && !labels.includes("consent-approved")) {
               await github.rest.issues.addLabels({ ...context.repo, issue_number: num, labels: ["consent-approved"] });
               await github.rest.issues.createComment({ ...context.repo, issue_number: num, body:

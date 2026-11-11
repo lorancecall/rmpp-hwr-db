@@ -4,7 +4,8 @@ language's own page on the site, so the site grows with every language.
   python scripts/add_language.py CODE NAME NATIVE [--mix CODE,en,digits]
 
 The new page starts as a copy of the English page (docs/index.html) marked "not translated yet"; replace its text
-with a translation (keep the structure, the ids and the <script>). English stays the default page.
+with a translation (keep the structure, the ids and the <script>). English stays the default page. The language
+also gets its own join form (.github/ISSUE_TEMPLATE/join-<code>.yml, from join-en.yml), which the site links to.
 """
 import argparse
 import json
@@ -48,11 +49,34 @@ def main():
           f"{''.join(', ' + f for f in forms)}; data/{a.code}/ appears with the first contribution")
 
 
+def join_form(code, name, native):
+    """join-<code>.yml: the English join form (join-en.yml) with this language fixed, labelled lang:<code>. The site
+    links every language's join button straight to its own form. The text stays English until translated."""
+    label = f"{name} / {native} ({code})" if native != name else f"{name} ({code})"
+    src = (ROOT / ".github" / "ISSUE_TEMPLATE" / "join-en.yml").read_text(encoding="utf-8")
+    out = []
+    for line in src.split("\n"):
+        if line.startswith("#"):
+            continue                                    # the note about this copy belongs to join-en.yml only
+        if line.startswith("name: "):
+            line = f'name: "Join: {native} ({name})"' if native != name else f'name: "Join: {name}"'
+        elif line.startswith("description: "):
+            line = f"description: Join the open handwriting dataset writing {name} + English + digits"
+        line = line.replace("English (en)", label).replace('"lang:en"', f'"lang:{code}"')
+        line = line.replace("rmpp-hwr-db/#start", f"rmpp-hwr-db/{code}/#start")
+        out.append(line)
+    return "\n".join(out)
+
+
 def update_forms(code, name, native):
-    """The join form lists the supported languages (new one above its last option, 'Another language'); the
-    language request form stops offering it. Returns the files changed."""
+    """A join form of its own (join-<code>.yml); the general join form lists the language too (above its last
+    option, 'Another language'); the language request form stops offering it. Returns the files changed."""
     tpl = ROOT / ".github" / "ISSUE_TEMPLATE"
     changed = []
+    own = tpl / f"join-{code}.yml"
+    if not own.exists():
+        own.write_text(join_form(code, name, native), encoding="utf-8", newline="\n")
+        changed.append(str(own.relative_to(ROOT)))
     join = tpl / "join.yml"
     lines = join.read_text(encoding="utf-8").split("\n")
     opt = f'        - "{name} / {native} ({code})"' if native != name else f'        - "{name} ({code})"'
