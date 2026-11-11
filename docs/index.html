@@ -43,6 +43,29 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 .langs b { color: var(--fg); }
 .by-lang { margin: 4px 0 8px; }
 .by-lang .num { text-align: right; font-variant-numeric: tabular-nums; }
+.start { margin: 8px 0 28px; }
+.start h2 { border-top: 0; margin: 0 0 4px; padding-top: 0; }
+.start .hint { color: var(--muted); margin: 0 0 14px; font-size: 0.95rem; }
+.pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin: 0 0 16px; }
+.pick > a, .pick > button { display: block; text-align: left; font: inherit; color: var(--fg); cursor: pointer;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; text-decoration: none; }
+.pick > :hover { border-color: var(--accent); }
+.pick > :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pick > [aria-pressed="true"] { border: 2px solid var(--accent); padding: 11px 13px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
+.pick .native { display: block; font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
+.pick .sub { display: block; color: var(--muted); font-size: 0.82rem; }
+.pick .other { border-style: dashed; }
+.pick .other .native { font-size: 1rem; color: var(--accent); }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 0 0 12px; }
+.panel h3 { margin: 0 0 6px; }
+.panel p { margin: 6px 0; }
+.panel .small { color: var(--muted); font-size: 0.88rem; }
+.panel ol { margin: 8px 0 0; padding-left: 22px; }
+.panel input { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; width: 100%; max-width: 420px; }
+.panel input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.panel label { display: block; font-weight: 600; margin: 10px 0 6px; }
 </style>
 </head>
 <body>
@@ -51,8 +74,19 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 <h1>Join the open handwriting dataset</h1>
 <p class="lead">Handwriting written on the reMarkable Paper Pro, in many languages plus English and digits, collected
 as an open dataset for handwriting recognition data and models anyone can use.</p>
-<a class="btn" href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join.yml">Join</a>
-<a class="btn secondary" href="https://github.com/lorancecall/rmpp-hwr-db">Repository</a>
+
+<section class="start" id="start" aria-labelledby="start-h">
+<h2 id="start-h">Choose your language</h2>
+<p class="hint">The language you will write. Each practice notebook mixes it with English and digits.</p>
+<!-- site.js rebuilds #pick from languages.json; these links are the fallback without JavaScript -->
+<div class="pick" id="pick">
+  <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join-en.yml"><span class="native">English</span><span class="sub">English + digits</span></a>
+  <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join-ko.yml" lang="ko"><span class="native">한국어</span><span class="sub">Korean</span></a>
+  <a class="other" href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml"><span class="native">My language isn't listed</span><span class="sub">Ask for it</span></a>
+</div>
+<div id="pick-next" aria-live="polite"></div>
+</section>
+<p><a class="btn secondary" href="https://github.com/lorancecall/rmpp-hwr-db">Repository</a></p>
 
 <div class="stats" id="stats" aria-live="polite">
   <div class="stat"><b id="s-writers">–</b><span>writers</span></div>
@@ -83,7 +117,8 @@ data of each language lives in its own folder <code>data/&lt;code&gt;/</code>. S
 <a href="https://github.com/lorancecall/rmpp-hwr-db/blob/main/languages.json">languages.json</a>; each language
 also has its own page here (top of the page).</p>
 <p>Your language is missing? Ask for it with the
-<a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml">"Add a language" form</a>.
+<a data-request href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml">"Add a language" form</a> (or "My language isn't listed" at
+<a href="#start">the top</a>).
 Once the characters and the practice texts (newly written or public domain) are settled, the language gets its
 practice pages, its data folder and its own page on this site.</p>
 
@@ -113,8 +148,8 @@ tools/hwr install</code></pre>
 Details: <a href="https://github.com/lorancecall/rmpp-hwr#install">rmpp-hwr install guide</a>. Run
 <code>tools/hwr install</code> again after a tablet OS update.</li>
 <li><strong>Join (consent)</strong>
-Open the <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join.yml">join form</a> and tick the
-five consent items. When the confirmation comment appears, note the <b>issue number</b>.</li>
+Open the <a data-join href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join-en.yml">join form for your language</a> (pick it at
+<a href="#start">the top of the page</a>) and tick the five consent items. When the confirmation comment appears, note the <b>issue number</b>.</li>
 <li><strong>Get a practice notebook</strong>
 <pre><code>hwr practice --v2 --lang en    # English + digits
 hwr practice --v2 --lang ko    # Korean + English + digits</code></pre>

@@ -1,0 +1,55 @@
+name: "Join: English"
+description: Join the open handwriting dataset writing English + digits, and agree to how your data is shared
+title: "[join] English (en)"
+labels: ["join", "lang:en"]
+# One join form per supported language (the site links straight to it). scripts/add_language.py copies this file
+# to join-<code>.yml for a new language: it replaces "English (en)", "English" in the name and "lang:en".
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Join the **open dataset** of handwriting (pen strokes) written on the reMarkable Paper Pro.
+        Guide: https://lorancecall.github.io/rmpp-hwr-db/
+
+        This issue is **public**: do not write your name, contact details or any personal information here.
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language you write
+      description: |
+        Set by this form: your practice notebook mixes this language with English and digits. Wrong language? Go
+        back and pick yours: https://lorancecall.github.io/rmpp-hwr-db/#start
+      options:
+        - "English (en)"
+      default: 0
+    validations:
+      required: true
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent (all five are required)
+      options:
+        - label: My handwriting data is published under CC BY 4.0, so anyone may use, change and share it (also commercially) with attribution.
+          required: true
+        - label: I only copied the sentences printed on the practice pages and wrote no personal information (names, contacts, addresses); pages with such writing are not submitted.
+          required: true
+        - label: The data holds only a random writer id, but the GitHub account opening this issue and the pull request is public.
+          required: true
+        - label: I am at least 14 years old.
+          required: true
+        - label: If I withdraw, my data is removed from later versions, but published earlier versions and copies others downloaded cannot be recalled.
+          required: true
+  - type: dropdown
+    id: hand
+    attributes:
+      label: Writing hand (optional, public)
+      options: ["no answer", "right", "left", "both"]
+    validations:
+      required: false
+  - type: dropdown
+    id: age
+    attributes:
+      label: Age range (optional, public)
+      options: ["no answer", "10-19", "20-29", "30-39", "40-49", "50-59", "60+"]
+    validations:
+      required: false

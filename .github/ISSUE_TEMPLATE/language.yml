@@ -16,9 +16,10 @@ body:
     attributes:
       label: Language / 언어
       description: |
-        Korean (ko) and English (en) are supported already. The list holds the languages most handwriting tools
-        support (reMarkable's own conversion, Apple, Google); any other language: pick Other.
-        한국어와 영어는 이미 지원합니다. 목록에 없는 언어는 기타를 고르세요.
+        Languages most handwriting tools support (reMarkable's own conversion, Apple, Google). Not in the list:
+        leave this empty (or pick Other) and write the code and name in the next field.
+        Supported already: https://lorancecall.github.io/rmpp-hwr-db/#start
+        목록에 없으면 비워 두고(또는 기타) 다음 칸에 코드와 이름을 적으세요.
       options:
         - "Japanese / 日本語 (ja)"
         - "Chinese, Simplified / 简体中文 (zh)"
@@ -42,12 +43,15 @@ body:
         - "Vietnamese / Tiếng Việt (vi)"
         - "Other (code below) / 기타"
     validations:
-      required: true
+      required: false
   - type: input
     id: other
     attributes:
-      label: Only for Other - ISO 639-1 code and name / 기타일 때만 - 언어 코드와 이름
-      description: Two lowercase letters (https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes), then the name. A bot checks the code.
+      label: Other language - ISO 639-1 code and name / 목록에 없는 언어 - 코드와 이름
+      description: |
+        Only when the list above has no choice. Two lowercase letters
+        (https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes), the English name, then the language's own
+        name. The site's "My language isn't listed" search fills this in. A bot checks the code.
       placeholder: "ka Georgian / ქართული"
     validations:
       required: false
