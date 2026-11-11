@@ -25,6 +25,11 @@
         nav.appendChild(a);
       }
     }
+    // languages without a page yet: the "Add a language" form (a request opens a pull request with its page)
+    const add = document.createElement("a");
+    add.href = "https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml";
+    add.textContent = here === "ko" ? "+ 언어 추가 요청" : "+ Add your language";
+    nav.appendChild(add);
     const n = document.getElementById("s-langs");
     if (n) n.textContent = nf.format(Object.keys(langs).length);
   }).catch(() => {});
