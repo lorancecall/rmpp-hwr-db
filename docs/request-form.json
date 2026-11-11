@@ -1,0 +1,67 @@
+{
+ "_about": "Texts of the site's language request form, by language code: the requested language's texts, else the page's, else English. {lang} = the language's name. 'review' is shown for a translation no native speaker has checked yet. The issue keeps English headings (scripts/languages.py reads them).",
+ "en": {
+  "title": "Request {lang}",
+  "intro": "This opens a public GitHub issue for {lang}; press Submit there. Do not write personal information.",
+  "writer": "I have a reMarkable Paper Pro and would write practice pages in {lang}.",
+  "notes": "Anything to add? (optional: characters to practise, sources of public domain texts)",
+  "submit": "Continue on GitHub",
+  "review": ""
+ },
+ "ko": {
+  "title": "{lang} 추가 요청",
+  "intro": "{lang} 추가를 요청하는 공개 GitHub 이슈가 열립니다. GitHub에서 Submit을 누르세요. 개인 정보는 적지 마세요.",
+  "writer": "reMarkable Paper Pro가 있고 {lang}로 연습 페이지를 쓸 수 있습니다.",
+  "notes": "덧붙일 말 (선택: 연습할 글자, 퍼블릭 도메인 문장 출처)",
+  "submit": "GitHub에서 계속하기",
+  "review": ""
+ },
+ "ja": {
+  "title": "{lang}の追加をリクエスト",
+  "intro": "{lang}の追加をリクエストする公開 GitHub Issue が開きます。GitHub で Submit を押してください。個人情報は書かないでください。",
+  "writer": "reMarkable Paper Pro を持っていて、{lang}で練習ページを書けます。",
+  "notes": "補足（任意：練習する文字、パブリックドメインの文章の出典）",
+  "submit": "GitHub で続ける",
+  "review": "機械翻訳です。修正を歓迎します。"
+ },
+ "zh": {
+  "title": "申请添加{lang}",
+  "intro": "将打开一个申请添加{lang}的公开 GitHub Issue，请在 GitHub 上点击 Submit。请不要填写个人信息。",
+  "writer": "我有 reMarkable Paper Pro，可以用{lang}书写练习页。",
+  "notes": "补充说明（可选：要练习的字符、公有领域文本的来源）",
+  "submit": "在 GitHub 上继续",
+  "review": "机器翻译，欢迎指正。"
+ },
+ "zh-hant": {
+  "title": "申請新增{lang}",
+  "intro": "將開啟一個申請新增{lang}的公開 GitHub Issue，請在 GitHub 上點擊 Submit。請不要填寫個人資訊。",
+  "writer": "我有 reMarkable Paper Pro，可以用{lang}書寫練習頁。",
+  "notes": "補充說明（選填：要練習的字元、公有領域文本的來源）",
+  "submit": "在 GitHub 上繼續",
+  "review": "機器翻譯，歡迎指正。"
+ },
+ "de": {
+  "title": "{lang} anfragen",
+  "intro": "Das öffnet ein öffentliches GitHub-Issue für {lang}; klicke dort auf Submit. Bitte keine persönlichen Daten angeben.",
+  "writer": "Ich habe ein reMarkable Paper Pro und würde Übungsseiten auf {lang} schreiben.",
+  "notes": "Noch etwas? (optional: zu übende Zeichen, Quellen gemeinfreier Texte)",
+  "submit": "Weiter auf GitHub",
+  "review": "Maschinell übersetzt; Korrekturen willkommen."
+ },
+ "fr": {
+  "title": "Demander : {lang}",
+  "intro": "Cela ouvre une issue GitHub publique pour : {lang} ; cliquez sur Submit. N'écrivez aucune information personnelle.",
+  "writer": "J'ai une reMarkable Paper Pro et j'écrirais des pages d'exercice dans cette langue ({lang}).",
+  "notes": "Autre chose ? (facultatif : caractères à pratiquer, sources de textes du domaine public)",
+  "submit": "Continuer sur GitHub",
+  "review": "Traduction automatique ; corrections bienvenues."
+ },
+ "es": {
+  "title": "Solicitar: {lang}",
+  "intro": "Se abrirá una issue pública de GitHub para: {lang}; pulsa Submit allí. No escribas información personal.",
+  "writer": "Tengo un reMarkable Paper Pro y escribiría páginas de práctica en este idioma ({lang}).",
+  "notes": "¿Algo más? (opcional: caracteres para practicar, fuentes de textos de dominio público)",
+  "submit": "Continuar en GitHub",
+  "review": "Traducción automática; se agradecen correcciones."
+ }
+}
