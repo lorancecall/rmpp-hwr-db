@@ -1,0 +1,77 @@
+name: Language request
+
+# An "Add a language" issue: read the language from the form and check its code (ISO 639-1, scripts/languages.py),
+# label the issue lang:<code>, reply with what rmpp-hwr can do for it (support tier), and for a new language open a
+# pull request that adds its languages.json entry and its page (scripts/add_language.py) for the maintainer to
+# review. Practice texts follow separately.
+# Needs Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests"; without it the
+# reply gives the command to run instead.
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: language-request-${{ github.event.issue.number }}
+
+jobs:
+  check:
+    if: contains(github.event.issue.labels.*.name, 'language-request')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - id: check
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: python scripts/languages.py check-issue
+      - name: Pull request for a new language
+        id: pr
+        if: steps.check.outputs.new == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CODE: ${{ steps.check.outputs.code }}
+          NAME: ${{ steps.check.outputs.name }}
+          NATIVE: ${{ steps.check.outputs.native }}
+          NUM: ${{ github.event.issue.number }}
+        run: |
+          branch="language/$CODE"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
+            echo "url=(a pull request for $CODE exists already)" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          python scripts/add_language.py "$CODE" "$NAME" "$NATIVE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add languages.json "docs/$CODE" .github/ISSUE_TEMPLATE
+          git commit -q -m "Add language $CODE ($NAME / $NATIVE)"
+          git push -q origin "$branch"
+          if url=$(gh pr create --head "$branch" --base main --title "Add language $CODE ($NAME / $NATIVE)" \
+                     --body "From #$NUM. Adds the languages.json entry, the page docs/$CODE/ (English text, to be translated) and the language to the join form. Practice texts come separately."); then
+            echo "url=$url" >> "$GITHUB_OUTPUT"
+          else
+            echo "url=(branch $branch pushed; open the pull request by hand)" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Label and reply
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CODE: ${{ steps.check.outputs.code }}
+          COMMENT: ${{ steps.check.outputs.comment }}
+          PR: ${{ steps.pr.outputs.url }}
+          NUM: ${{ github.event.issue.number }}
+        run: |
+          if [ -n "$CODE" ]; then
+            gh label create "lang:$CODE" -R "$GITHUB_REPOSITORY" --color C5DEF5 2>/dev/null || true
+            gh issue edit "$NUM" -R "$GITHUB_REPOSITORY" --add-label "lang:$CODE"
+          fi
+          body="$COMMENT"
+          [ -n "$PR" ] && body="$body
+
+          Pull request: $PR"
+          gh issue comment "$NUM" -R "$GITHUB_REPOSITORY" --body "$body"

@@ -21,7 +21,7 @@ from pathlib import Path
 
 FORMAT = "rmpp-hwr-db/page@1"
 UUID = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
-PATH_RE = re.compile(rf"^data/([a-z]{{2,8}})/({UUID})/(writer\.json|([0-9a-f]{{16}})/page-(\d\d)\.json)$")
+PATH_RE = re.compile(rf"^data/([a-z]{{2,3}}(?:-[a-z]{{2,4}})?)/({UUID})/(writer\.json|([0-9a-f]{{16}})/page-(\d\d)\.json)$")
 LANGUAGES = json.loads(Path("languages.json").read_text(encoding="utf-8"))
 OLD_MIX = ["ko", "en", "digits"]
 WRITER_KEYS = {"writer", "consent_issue", "license", "handedness", "age_band"}
