@@ -49,11 +49,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"
-          git add languages.json "docs/$CODE"
+          git add languages.json "docs/$CODE" .github/ISSUE_TEMPLATE
           git commit -q -m "Add language $CODE ($NAME / $NATIVE)"
           git push -q origin "$branch"
           if url=$(gh pr create --head "$branch" --base main --title "Add language $CODE ($NAME / $NATIVE)" \
-                     --body "From #$NUM. Adds the languages.json entry and the page docs/$CODE/ (English text, to be translated). Practice texts come separately."); then
+                     --body "From #$NUM. Adds the languages.json entry, the page docs/$CODE/ (English text, to be translated) and the language to the join form. Practice texts come separately."); then
             echo "url=$url" >> "$GITHUB_OUTPUT"
           else
             echo "url=(branch $branch pushed; open the pull request by hand)" >> "$GITHUB_OUTPUT"

@@ -41,6 +41,8 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line
 footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 .langs { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 24px; font-size: 0.92rem; }
 .langs b { color: var(--fg); }
+.by-lang { margin: 4px 0 8px; }
+.by-lang .num { text-align: right; font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
@@ -58,6 +60,7 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
   <div class="stat"><b id="s-chars">–</b><span>글자 샘플</span></div>
   <div class="stat"><b id="s-hangul">–</b><span>서로 다른 한글 음절</span></div>
 </div>
+<table class="by-lang" id="by-lang" aria-label="언어별 참여자"></table>
 
 <h2>무엇을 모으나요?</h2>
 <p>정해진 연습 페이지에 직접 쓴 손글씨를 <b>펜 획 그대로</b>(좌표, 압력, 굵기) 모읍니다. 연습 페이지는 네 가지입니다.</p>

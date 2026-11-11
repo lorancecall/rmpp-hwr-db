@@ -43,8 +43,31 @@ def main():
     out = ROOT / "docs" / a.code / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(page, encoding="utf-8", newline="\n")
-    print(f"added {a.code} ({a.name} / {a.native}), mix {'+'.join(mix)}: languages.json, {out.relative_to(ROOT)}; "
-          f"data/{a.code}/ appears with the first contribution")
+    forms = update_forms(a.code, a.name, a.native)
+    print(f"added {a.code} ({a.name} / {a.native}), mix {'+'.join(mix)}: languages.json, {out.relative_to(ROOT)}"
+          f"{''.join(', ' + f for f in forms)}; data/{a.code}/ appears with the first contribution")
+
+
+def update_forms(code, name, native):
+    """The join form lists the supported languages (new one above its last option, 'Another language'); the
+    language request form stops offering it. Returns the files changed."""
+    tpl = ROOT / ".github" / "ISSUE_TEMPLATE"
+    changed = []
+    join = tpl / "join.yml"
+    lines = join.read_text(encoding="utf-8").split("\n")
+    opt = f'        - "{name} / {native} ({code})"' if native != name else f'        - "{name} ({code})"'
+    last = next((i for i, l in enumerate(lines) if l.startswith('        - "Another language')), None)
+    if last is not None and opt not in lines:
+        lines.insert(last, opt)
+        join.write_text("\n".join(lines), encoding="utf-8", newline="\n")
+        changed.append(str(join.relative_to(ROOT)))
+    req = tpl / "language.yml"
+    lines = req.read_text(encoding="utf-8").split("\n")
+    kept = [l for l in lines if not (l.startswith('        - "') and l.rstrip().endswith(f'({code})"'))]
+    if len(kept) != len(lines):
+        req.write_text("\n".join(kept), encoding="utf-8", newline="\n")
+        changed.append(str(req.relative_to(ROOT)))
+    return changed
 
 
 if __name__ == "__main__":

@@ -15,29 +15,31 @@ body:
     id: language
     attributes:
       label: Language / 언어
-      description: Korean (ko) and English (en) are supported already. / 한국어와 영어는 이미 지원합니다.
+      description: |
+        Korean (ko) and English (en) are supported already. The list holds the languages most handwriting tools
+        support (reMarkable's own conversion, Apple, Google); any other language: pick Other.
+        한국어와 영어는 이미 지원합니다. 목록에 없는 언어는 기타를 고르세요.
       options:
         - "Japanese / 日本語 (ja)"
         - "Chinese, Simplified / 简体中文 (zh)"
         - "Chinese, Traditional / 繁體中文 (zh-hant)"
-        - "Russian / Русский (ru)"
-        - "Ukrainian / Українська (uk)"
         - "German / Deutsch (de)"
         - "French / Français (fr)"
         - "Spanish / Español (es)"
         - "Portuguese / Português (pt)"
         - "Italian / Italiano (it)"
         - "Dutch / Nederlands (nl)"
-        - "Polish / Polski (pl)"
         - "Swedish / Svenska (sv)"
-        - "Turkish / Türkçe (tr)"
+        - "Danish / Dansk (da)"
+        - "Norwegian / Norsk (no)"
+        - "Finnish / Suomi (fi)"
+        - "Polish / Polski (pl)"
+        - "Czech / Čeština (cs)"
+        - "Russian / Русский (ru)"
+        - "Ukrainian / Українська (uk)"
         - "Greek / Ελληνικά (el)"
+        - "Turkish / Türkçe (tr)"
         - "Vietnamese / Tiếng Việt (vi)"
-        - "Thai / ไทย (th)"
-        - "Indonesian / Bahasa Indonesia (id)"
-        - "Hindi / हिन्दी (hi)"
-        - "Arabic / العربية (ar)"
-        - "Hebrew / עברית (he)"
         - "Other (code below) / 기타"
     validations:
       required: true
