@@ -13,6 +13,21 @@ body:
 
         reMarkable Paper Pro로 쓴 손글씨를 공개 데이터셋에 기여하기 위한 신청입니다. 안내: https://lorancecall.github.io/rmpp-hwr-db/ko/
         이 이슈는 **공개**됩니다. 이름, 연락처 같은 개인 정보는 적지 마세요.
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language you write / 쓰는 언어
+      description: |
+        Your practice pages mix this language with English and digits. Not in the list? Ask for it first:
+        https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml
+        연습 페이지는 이 언어에 영어와 숫자를 섞습니다. 목록에 없으면 먼저 언어 추가를 요청해 주세요.
+      # Supported languages (languages.json); scripts/add_language.py adds new ones above the last line.
+      options:
+        - "English (en)"
+        - "Korean / 한국어 (ko)"
+        - "Another language (requested) / 다른 언어 (요청함)"
+    validations:
+      required: true
   - type: checkboxes
     id: consent
     attributes:

@@ -41,6 +41,8 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line
 footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 .langs { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 24px; font-size: 0.92rem; }
 .langs b { color: var(--fg); }
+.by-lang { margin: 4px 0 8px; }
+.by-lang .num { text-align: right; font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
@@ -59,6 +61,7 @@ as an open dataset for handwriting recognition data and models anyone can use.</
   <div class="stat"><b id="s-chars">–</b><span>character samples</span></div>
   <div class="stat"><b id="s-langs">–</b><span>languages</span></div>
 </div>
+<table class="by-lang" id="by-lang" aria-label="Writers per language"></table>
 
 <h2>What is collected</h2>
 <p>Handwriting on printed practice pages, stored <b>as pen strokes</b> (coordinates, pressure, width). There are

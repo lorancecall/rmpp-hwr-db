@@ -34,12 +34,45 @@
     if (n) n.textContent = nf.format(Object.keys(langs).length);
   }).catch(() => {});
 
-  fetch(root + "stats.json").then(r => (r.ok ? r.json() : null)).then(s => {
+  const get = f => fetch(root + f).then(r => (r.ok ? r.json() : null)).catch(() => null);
+  Promise.all([get("stats.json"), get("languages.json")]).then(([s, langs]) => {
     if (!s) return;
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = nf.format(Number(v || 0)); };
     set("s-writers", s.writers); set("s-pages", s.pages); set("s-lines", s.lines); set("s-chars", s.char_samples);
     set("s-hangul", s.distinct_hangul);
-    const mine = s.languages && s.languages[here];
+    const per = s.languages || {};
+    const mine = per[here];
     if (mine) { set("s-lang-pages", mine.pages); set("s-lang-lines", mine.lines); }
-  }).catch(() => {});
+    byLanguage(per, langs || {});
+  });
+
+  // Writers, pages and lines per language: every supported language (languages.json), also those without data
+  // yet, most writers first; this page's language in bold.
+  function byLanguage(per, langs) {
+    const table = document.getElementById("by-lang");
+    if (!table) return;
+    const ko = here === "ko";
+    const head = ko ? ["언어", "참여자", "페이지", "줄"] : ["Language", "Writers", "Pages", "Lines"];
+    const codes = [...new Set([...Object.keys(langs), ...Object.keys(per)])];
+    const n = c => per[c] || { writers: 0, pages: 0, lines: 0 };
+    codes.sort((a, b) => n(b).writers - n(a).writers || n(b).lines - n(a).lines || a.localeCompare(b));
+    const tr = (cells, tag) => {
+      const row = document.createElement("tr");
+      cells.forEach((v, i) => {
+        const cell = document.createElement(tag);
+        cell.textContent = v;
+        if (i) cell.className = "num";
+        row.appendChild(cell);
+      });
+      return row;
+    };
+    table.replaceChildren(tr(head, "th"));
+    for (const c of codes) {
+      const L = langs[c] || {};
+      const name = L.native && L.native !== L.name ? `${L.native} (${L.name})` : (L.name || c);
+      const row = tr([name, nf.format(n(c).writers), nf.format(n(c).pages), nf.format(n(c).lines)], "td");
+      if (c === here) row.style.fontWeight = "700";
+      table.appendChild(row);
+    }
+  }
 })();
