@@ -7,7 +7,9 @@ strokes (coordinates, pressure, width). The data is used for line- and character
 
 - **How to take part**: https://lorancecall.github.io/rmpp-hwr-db/ (English; every language has its own page, e.g.
   [한국어](https://lorancecall.github.io/rmpp-hwr-db/ko/))
-- **Join**: [consent issue form](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join.yml)
+- **Join**: [choose your language](https://lorancecall.github.io/rmpp-hwr-db/#start), then open its consent form
+  (one issue form per language, `.github/ISSUE_TEMPLATE/join-<code>.yml`; the general
+  [join form](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join.yml) still works)
 - **Languages**: a practice notebook mixes the writer's language + English + digits; the data of each language is
   in `data/<code>/`. Supported: [languages.json](languages.json). Your language is missing? Use the
   ["Add a language" form](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml); an accepted
