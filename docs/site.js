@@ -30,14 +30,10 @@
       guide: L => `Read this guide in ${L}`,
       next: "Then follow \"How to take part\" below.",
       reqH: "Ask for your language",
-      reqIntro: "Search your language by name or two-letter code. The request is a public GitHub issue; it needs " +
-        "the characters to practise and where sentences to copy can come from.",
+      reqIntro: "Search your language by name or two-letter code.",
       reqLabel: "Your language",
       reqPlaceholder: "e.g. Japanese, 日本語, ja",
-      reqBtn: L => `Request ${L}`,
-      reqPlain: "Open the request form",
-      reqFree: t => `Request “${t}”`,
-      reqFreeNote: "Not in the list: the form asks for the two-letter ISO 639-1 code; a bot checks it.",
+      reqFreeNote: "Not in the list: a bot will ask in the issue for the two-letter ISO 639-1 code.",
       reqAlready: L => `${L} is supported already.`,
       reqOpen: L => `Already asked? Requests for ${L}`,
       reqAllOpen: "Open language requests",
@@ -64,14 +60,10 @@
       guide: L => `${L} 안내 페이지 보기`,
       next: "그다음 아래 \"참여 방법\"을 따라 하세요.",
       reqH: "언어 추가 요청",
-      reqIntro: "언어 이름이나 두 글자 코드로 찾아보세요. 요청은 공개 GitHub 이슈로 열리고, 연습할 문자와 따라 쓸 문장의 " +
-        "출처를 묻습니다.",
+      reqIntro: "언어 이름이나 두 글자 코드로 찾아보세요.",
       reqLabel: "내 언어",
       reqPlaceholder: "예: 일본어, 日本語, ja",
-      reqBtn: L => `${L} 추가 요청하기`,
-      reqPlain: "요청 양식 열기",
-      reqFree: t => `“${t}” 추가 요청하기`,
-      reqFreeNote: "목록에 없는 언어는 양식에서 두 글자 ISO 639-1 코드를 적어 주세요. 봇이 확인합니다.",
+      reqFreeNote: "목록에 없는 언어는 이슈에서 봇이 두 글자 ISO 639-1 코드를 물어봅니다.",
       reqAlready: L => `${L}는 이미 지원합니다.`,
       reqOpen: L => `이미 요청됐는지 보기: ${L} 요청`,
       reqAllOpen: "열려 있는 언어 요청",
@@ -112,7 +104,9 @@
   const issues = q => `${REPO}/issues?q=${encodeURIComponent("is:issue " + q)}`;
 
   const get = f => fetch(root + f).then(r => (r.ok ? r.json() : null)).catch(() => null);
-  Promise.all([get("languages.json"), get("stats.json")]).then(([langs, s]) => {
+  let forms = {};                                       // request-form.json: the request form's texts by language
+  Promise.all([get("languages.json"), get("stats.json"), get("request-form.json")]).then(([langs, s, f]) => {
+    forms = f || {};
     const per = (s && s.languages) || {};
     if (langs) { menu(langs); start(langs, per); }
     if (s) numbers(s);
@@ -197,13 +191,15 @@
     for (const a of document.querySelectorAll("a[data-request]")) a.addEventListener("click", toRequest);
   }
 
-  // The "not listed" panel: search every ISO 639-1 language (names from the browser's Intl data), then a request
-  // link with the form's text field prefilled, a link to earlier requests for it, and what happens next.
+  // The "not listed" panel: search the ISO 639-1 languages not supported yet (names from the browser's Intl data).
+  // A found language gets a short form in that language (request-form.json; else this page's language, else
+  // English) that opens a blank GitHub issue with title and body filled in: no issue template per language. The body
+  // keeps English headings and a marker, which the language-request workflow reads.
   function request(langs, choose) {
     const known = new Set(Object.keys(langs));
     const opt = c => `${local(c)}${native(c) !== local(c) ? " / " + native(c) : ""} (${c})`;
     const list = el("datalist", { id: "iso-langs" });
-    for (const c of ISO.filter(c => english(c) !== c).sort((a, b) => local(a).localeCompare(local(b), here)))
+    for (const c of ISO.filter(c => english(c) !== c && !known.has(c)).sort((a, b) => local(a).localeCompare(local(b), here)))
       list.append(el("option", { value: opt(c) }));
     const input = el("input", { id: "req-lang", type: "text", list: "iso-langs", autocomplete: "off",
       placeholder: T.reqPlaceholder });
@@ -217,40 +213,72 @@
       if (ISO.includes(q)) return q;
       return ISO.find(c => [english(c), native(c), local(c)].some(n => n.toLowerCase() === q)) || null;
     };
+    let shown = null;                                   // keep the form (and what was typed) while the input is the same language
     const update = () => {
       const t = input.value.trim(), c = find(t);
-      const kids = [];
+      const key = c || (t ? "?" + t : "");
+      if (key === shown) return;
+      shown = key;
       if (c && known.has(c)) {
         const b = el("button", { type: "button", class: "btn", text: T.joinBtn(label(langs, c)) });
         b.addEventListener("click", () => choose(c, true));
-        kids.push(el("p", { text: T.reqAlready(label(langs, c)) }), el("p", {}, b));
-      } else if (c) {
-        const title = `[language] ${english(c)}${native(c) !== english(c) ? " / " + native(c) : ""} (${c})`;
-        const other = `${c} ${english(c)}${native(c) !== english(c) ? " / " + native(c) : ""}`;
-        kids.push(el("p", {}, el("a", { class: "btn", text: T.reqBtn(local(c)),
-          href: NEW + "language.yml&title=" + encodeURIComponent(title) + "&other=" + encodeURIComponent(other) })),
-          el("p", { class: "small" }, el("a", { href: issues(`label:"lang:${c}"`), text: T.reqOpen(local(c)) })));
-      } else if (t) {
-        kids.push(el("p", {}, el("a", { class: "btn", text: T.reqFree(t),
-          href: NEW + "language.yml&title=" + encodeURIComponent("[language] " + t) + "&other=" + encodeURIComponent(t) })),
-          el("p", { class: "small", text: T.reqFreeNote }));
+        out.replaceChildren(el("p", { text: T.reqAlready(label(langs, c)) }), el("p", {}, b));
+      } else if (c || t) {
+        out.replaceChildren(form(c, t));
       } else {
-        kids.push(el("p", {}, el("a", { class: "btn secondary", href: NEW + "language.yml", text: T.reqPlain })));
+        out.replaceChildren();
       }
-      out.replaceChildren(...kids);
     };
     input.addEventListener("input", update);
     update();
 
     const after = el("ol");
     for (const s of T.after) after.append(el("li", { text: s }));
-    const panel = el("div", { class: "panel", id: "request" },
+    return el("div", { class: "panel", id: "request" },
       el("h3", { text: T.reqH }),
       el("p", { class: "small", text: T.reqIntro }),
       el("label", { for: "req-lang", text: T.reqLabel }), input, list, out,
       el("h3", { text: T.afterH, style: "margin-top:18px" }), after,
       el("p", { class: "small" }, el("a", { href: issues("is:open label:language-request"), text: T.reqAllOpen })));
-    return panel;
+  }
+
+  // The request form for language c (or free text t when the search found no code).
+  function form(c, t) {
+    const own = c && forms[c];
+    const tl = own ? c : forms[here] ? here : "en";
+    const F = Object.assign({}, forms.en || {}, forms[tl] || {});
+    const name = !c ? t : own ? native(c) : local(c);
+    const fill = s => (s || "").split("{lang}").join(name);
+    const en = c ? english(c) : t, nat = c ? native(c) : "";
+    const both = nat && nat !== en ? `${en} / ${nat}` : en;
+    const writer = el("input", { type: "checkbox", id: "req-writer" });
+    const notes = el("textarea", { id: "req-notes", rows: "3", maxlength: "1500" });
+    notes.style.cssText = "font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);" +
+      "border-radius:8px;padding:9px 12px;width:100%";
+    const go = el("a", { class: "btn", text: fill(F.submit), target: "_blank", rel: "noopener" });
+    const link = () => {
+      const body = ["<!-- rmpp-hwr-db:language-request -->",
+        "### Language", "", c ? `${both} (${c})` : "_No response_", "",
+        "### Other language", "", c ? "_No response_" : t, "",
+        "### Contributing", "",
+        `- [${writer.checked ? "x" : " "}] I have a reMarkable Paper Pro and would write practice pages in this language.`, "",
+        "### Notes", "", notes.value.trim() || "_No response_", ""].join("\n");
+      const title = `[language] ${both}${c ? ` (${c})` : ""}`;
+      go.href = `${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+    };
+    writer.addEventListener("change", link);
+    notes.addEventListener("input", link);
+    link();
+    const kids = [
+      el("h3", { text: fill(F.title), style: "margin-top:16px" }),
+      el("p", { class: "small", text: fill(F.intro) }),
+      el("label", { style: "font-weight:400;display:flex;gap:8px;align-items:flex-start" }, writer, el("span", { text: fill(F.writer) })),
+      el("label", { for: "req-notes", text: fill(F.notes) }), notes,
+      el("p", {}, go)];
+    if (F.review && own) kids.push(el("p", { class: "small", text: F.review }));
+    if (c) kids.push(el("p", { class: "small", lang: here }, el("a", { href: issues(`label:"lang:${c}"`), text: T.reqOpen(local(c)) })));
+    else kids.push(el("p", { class: "small", lang: here, text: T.reqFreeNote }));
+    return el("div", { lang: tl }, ...kids);
   }
 
   function numbers(s) {
