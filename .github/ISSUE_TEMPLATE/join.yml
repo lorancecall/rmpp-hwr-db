@@ -1,41 +1,44 @@
-name: 참여 신청 (데이터 기여 동의)
-description: rmpp-hwr 손글씨 공개 데이터셋에 손글씨를 기여하기 위한 신청과 동의
-title: "[참여] 손글씨 데이터 기여"
+name: Join (consent) / 참여 신청 (동의)
+description: Join the open rmpp-hwr handwriting dataset and agree to how your data is shared / 손글씨 데이터 기여 신청과 동의
+title: "[join] handwriting contribution"
 labels: ["join"]
 body:
   - type: markdown
     attributes:
       value: |
-        reMarkable Paper Pro에서 쓴 손글씨(펜 획 데이터)를 한국어·영어·숫자 손글씨 인식용 **공개 데이터셋**으로 기여하기 위한 신청입니다.
-        자세한 안내: https://lorancecall.github.io/rmpp-hwr-db/
+        Join the **open dataset** of handwriting (pen strokes) written on the reMarkable Paper Pro, for handwriting
+        recognition in your language, English and digits. Guide: https://lorancecall.github.io/rmpp-hwr-db/
 
-        이 이슈는 **공개**됩니다. 아래 칸에 이름, 연락처 같은 개인 정보는 적지 마세요.
+        This issue is **public**: do not write your name, contact details or any personal information here.
+
+        reMarkable Paper Pro로 쓴 손글씨를 공개 데이터셋에 기여하기 위한 신청입니다. 안내: https://lorancecall.github.io/rmpp-hwr-db/ko/
+        이 이슈는 **공개**됩니다. 이름, 연락처 같은 개인 정보는 적지 마세요.
   - type: checkboxes
     id: consent
     attributes:
-      label: 동의 사항 (모두 확인해야 참여할 수 있습니다)
+      label: Consent (all five are required) / 동의 사항 (모두 필요)
       options:
-        - label: 제출하는 손글씨 데이터가 CC BY 4.0 라이선스로 공개되어, 출처를 밝히면 누구나 (상업적 이용을 포함해) 사용·수정·재배포할 수 있다는 데 동의합니다.
+        - label: My handwriting data is published under CC BY 4.0, so anyone may use, change and share it (also commercially) with attribution. / 제출하는 데이터가 CC BY 4.0으로 공개되어, 출처를 밝히면 누구나(상업적 이용 포함) 사용·수정·재배포할 수 있다는 데 동의합니다.
           required: true
-        - label: 연습 페이지에 인쇄된 문장만 따라 썼고, 이름·연락처·주소 같은 개인 정보는 쓰지 않았습니다 (쓴 페이지는 제출하지 않습니다).
+        - label: I only copied the sentences printed on the practice pages and wrote no personal information (names, contacts, addresses); pages with such writing are not submitted. / 연습 페이지에 인쇄된 문장만 따라 썼고 개인 정보는 쓰지 않았습니다.
           required: true
-        - label: 데이터에는 무작위 작성자 ID만 들어가지만, 이 이슈와 Pull Request를 연 GitHub 계정은 공개된다는 점을 이해합니다.
+        - label: The data holds only a random writer id, but the GitHub account opening this issue and the pull request is public. / 데이터에는 무작위 작성자 ID만 들어가지만, 이 이슈와 PR을 연 GitHub 계정은 공개된다는 점을 이해합니다.
           required: true
-        - label: 만 14세 이상입니다.
+        - label: I am at least 14 years old. / 만 14세 이상입니다.
           required: true
-        - label: 철회를 요청하면 이후 버전에서 제 데이터가 삭제되지만, 이미 공개된 이전 버전과 다른 사람이 받아 간 사본은 회수할 수 없다는 점을 이해합니다.
+        - label: If I withdraw, my data is removed from later versions, but published earlier versions and copies others downloaded cannot be recalled. / 철회하면 이후 버전에서 삭제되지만, 이미 공개된 이전 버전과 다른 사람이 받아 간 사본은 회수할 수 없다는 점을 이해합니다.
           required: true
   - type: dropdown
     id: hand
     attributes:
-      label: 주로 쓰는 손 (선택, 공개됨)
-      options: ["응답 안 함", "오른손", "왼손", "양손"]
+      label: Writing hand (optional, public) / 주로 쓰는 손 (선택, 공개됨)
+      options: ["no answer / 응답 안 함", "right / 오른손", "left / 왼손", "both / 양손"]
     validations:
       required: false
   - type: dropdown
     id: age
     attributes:
-      label: 연령대 (선택, 공개됨)
-      options: ["응답 안 함", "10대", "20대", "30대", "40대", "50대", "60대 이상"]
+      label: Age range (optional, public) / 연령대 (선택, 공개됨)
+      options: ["no answer / 응답 안 함", "10-19", "20-29", "30-39", "40-49", "50-59", "60+"]
     validations:
       required: false
