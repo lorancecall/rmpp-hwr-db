@@ -70,9 +70,10 @@ def tier(code):
 
 
 def parse_request(body):
-    """-> (code, name, native) from the form: dropdown 'Name / Native (code)' or Other 'code Name / Native'."""
+    """-> (code, name, native) from the form: dropdown 'Name / Native (code)', else the text field
+    'code Name / Native' (the dropdown is optional: the site prefills the text field)."""
     choice = answer(body, "Language")
-    other = answer(body, "Only for Other")
+    other = answer(body, "Other language") or answer(body, "Only for Other")    # label before the site flow
     m = re.match(r"\s*(.+?)\s*/\s*(.+?)\s*\(([a-z]{2}(?:-[a-z]{2,4})?)\)\s*$", choice)
     if m:
         return m.group(3), m.group(1), m.group(2)
@@ -98,9 +99,12 @@ def check_issue(body):
         return code, name, native, (f"`{code}` ({known[code].get('name')}) is supported already: "
                                     f"https://lorancecall.github.io/rmpp-hwr-db/{known[code].get('page', '')} / "
                                     "이미 지원하는 언어입니다.\n\n" + tier(code)), False
-    return code, name, native, (f"Thanks! Requested: **{name} / {native}** (`{code}`). A pull request adds its page and "
-                                "entry; practice texts follow after review. / 요청 언어의 페이지와 항목을 PR로 추가하고, "
-                                "연습 문장은 검토 후 이어집니다.\n\n" + tier(code)), True
+    return code, name, native, (f"Thanks! Requested: **{name} / {native}** (`{code}`). A pull request adds its page on the "
+                                "site and its join form; practice texts follow after review. When it is merged, the "
+                                "language shows up at https://lorancecall.github.io/rmpp-hwr-db/#start and you can join. "
+                                "Subscribe to this issue for updates. / 요청 언어의 사이트 페이지와 참여 양식을 PR로 "
+                                "추가하고, 연습 문장은 검토 후 이어집니다. 합쳐지면 사이트의 언어 목록에 나타나 참여할 수 "
+                                "있습니다.\n\n" + tier(code)), True
 
 
 if __name__ == "__main__":

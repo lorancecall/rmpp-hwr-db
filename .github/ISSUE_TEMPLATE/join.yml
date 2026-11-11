@@ -1,5 +1,5 @@
-name: Join (consent) / 참여 신청 (동의)
-description: Join the open rmpp-hwr handwriting dataset and agree to how your data is shared / 손글씨 데이터 기여 신청과 동의
+name: "Join: pick the language in the form / 참여 신청 (언어 선택)"
+description: The general join form; the site links to one form per language instead / 언어별 양식 대신 쓰는 일반 참여 신청 양식
 title: "[join] handwriting contribution"
 labels: ["join"]
 body:
