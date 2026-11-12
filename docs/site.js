@@ -2,7 +2,7 @@
 // data-t="key" get their text from docs/i18n/<code>.json ("page"), the parts built here from its "ui" (else
 // English, below). A supported language without a translation file shows the English text.
 //
-// Also built here: the language menu and "Choose your language" (from languages.json, so a language added through
+// Also built here: "Choose your language", which also switches the page (from languages.json, so a language added through
 // an issue shows up without touching the page), the numbers (stats.json, made by scripts/stats.py) and the
 // writers-per-language table.
 //
@@ -19,7 +19,6 @@
 
   // English texts of the parts built here; a translation's "ui" replaces them key by key. {lang} and {n} are filled in.
   const EN = {
-    add: "+ Add your language",
     digitsOnly: "English + digits",
     digits: "digits",
     writers: "{n} writers", writers1: "1 writer",
@@ -118,8 +117,6 @@
       e.innerHTML = v !== undefined ? v : english0.page[e.dataset.t];
     }
     for (const e of document.querySelectorAll("[data-only]")) e.hidden = e.dataset.only !== c;
-    const nav = document.getElementById("langs");
-    if (nav) nav.setAttribute("aria-label", t.nav || "Languages");
     const tb = document.getElementById("by-lang");
     if (tb) tb.setAttribute("aria-label", t.byLang || "Writers per language");
     render();
@@ -127,7 +124,7 @@
 
   function render() {
     const per = (stats && stats.languages) || {};
-    menu(); start(per);
+    start(per);
     if (stats) numbers(stats);
     byLanguage(per);
     const n = document.getElementById("s-langs");
@@ -139,31 +136,17 @@
   function use(c, pick) {
     store(SAVED, c);
     try { history.replaceState(null, "", "?lang=" + c + (pick ? "#start" : location.hash)); } catch (e) {}
-    if (pick || chosen) chosen = c;                     // a chosen language follows the menu too
+    if (pick) chosen = c;
     if (c === here) { render(); return Promise.resolve(); }
     return translation(c).then(tr => show(c, c === "en" ? null : tr));
   }
 
   const supported = () => {
-    const codes = Object.keys(langs);
-    // the current language first, then English, then the rest by code
-    return codes.sort((a, b) => (a === here ? -1 : b === here ? 1 : a === "en" ? -1 : b === "en" ? 1 : a.localeCompare(b)));
+    // English first, then by code: the cards keep their places when the page switches language
+    return Object.keys(langs).sort((a, b) => (a === "en" ? -1 : b === "en" ? 1 : a.localeCompare(b)));
   };
   const label = c => (langs[c] && (langs[c].native || langs[c].name)) || native(c);
 
-  function menu() {
-    const nav = document.getElementById("langs");
-    if (!nav) return;
-    nav.replaceChildren();
-    const codes = Object.keys(langs).sort((a, b) => (a === "en" ? -1 : b === "en" ? 1 : a.localeCompare(b)));
-    for (const c of codes) {
-      if (c === here) { nav.append(el("b", { text: label(c) })); continue; }
-      const a = el("a", { href: "?lang=" + c, lang: c, text: label(c) });
-      a.addEventListener("click", e => { e.preventDefault(); use(c, false); });
-      nav.append(a);
-    }
-    nav.append(el("a", { href: "#request", text: T("add") }));
-  }
 
   // "Choose your language": one card per supported language, then "not listed". Choosing a language shows the page
   // in it, with its join form (every [data-join] link of the page points to it); "not listed" shows the request search.
