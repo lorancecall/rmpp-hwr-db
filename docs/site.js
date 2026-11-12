@@ -28,7 +28,6 @@
       joinBtn: L => `Open the join form (${L})`,
       joinHow: "The form opens on GitHub, with your language already set. Tick the five consent items and submit; " +
         "a bot confirms in a minute and gives you the issue number for the next steps.",
-      guide: L => `Read this guide in ${L}`,
       next: "Then follow \"How to take part\" below.",
       sendBtn: L => `Send sentences in ${L}`,
       sendWhy: "No tablet, or want to help more? Send proverbs or sentences for the practice notebooks.",
@@ -62,7 +61,6 @@
       joinBtn: L => `참여 신청 양식 열기 (${L})`,
       joinHow: "GitHub에서 언어가 정해진 양식이 열립니다. 동의 항목 5개를 확인하고 제출하면, 1분 안에 봇이 확인 댓글로 " +
         "다음 단계에 쓸 이슈 번호를 알려 줍니다.",
-      guide: L => `${L} 안내 페이지 보기`,
       next: "그다음 아래 \"참여 방법\"을 따라 하세요.",
       sendBtn: L => `${L} 문장 보내기`,
       sendWhy: "태블릿이 없거나 더 돕고 싶다면, 연습 노트에 쓸 속담이나 문장을 보내 주세요.",
@@ -173,6 +171,11 @@
       other.setAttribute("aria-pressed", String(c === ""));
       if (c === undefined) { next.replaceChildren(el("p", { class: "hint", text: T.pickFirst })); return; }
       if (c === "") { next.replaceChildren(request(langs, choose)); return; }
+      // a language with its own page: go there, so everything is in that language
+      if (user && c !== here && langs[c].page !== undefined) {
+        location.href = root + langs[c].page + "?lang=" + c + "#start";
+        return;
+      }
       const name = label(langs, c);
       const joinUrl = NEW + `join-${c}.yml`;
       for (const a of document.querySelectorAll("a[data-join]")) a.href = joinUrl;
@@ -182,15 +185,13 @@
         const mix = (langs[c].mix || [c, "en", "digits"]).map(m => (m === "digits" ? T.digits : local(m)));
         cmd.textContent = `hwr practice --v2 --lang ${c}    # ${mix.join(" + ")}`;
       }
-      const guide = c !== here && langs[c].page !== undefined
-        ? el("a", { class: "btn secondary", href: root + langs[c].page + "#start", text: T.guide(name) }) : null;
       // sentences for the practice texts, in this language (the same short form as a language request)
       const slot = el("div");
       const sendBtn = el("button", { type: "button", class: "btn secondary", text: T.sendBtn(name) });
       sendBtn.addEventListener("click", () => { slot.replaceChildren(form(c, "", "send")); sendBtn.style.display = "none"; });
       next.replaceChildren(el("div", { class: "panel" },
         el("h3", { text: T.joinH(name) }),
-        el("p", {}, el("a", { class: "btn", href: joinUrl, text: T.joinBtn(name) }), guide),
+        el("p", {}, el("a", { class: "btn", href: joinUrl, text: T.joinBtn(name) })),
         el("p", { class: "small", text: T.joinHow }),
         el("p", { class: "small" }, el("a", { href: "#join", text: T.next })),
         el("p", { class: "small", text: T.sendWhy, style: "margin-top:14px" }), el("p", {}, sendBtn), slot));
@@ -204,6 +205,8 @@
     else if (asked && cards[asked]) choose(asked);
     else if (here !== "en" && cards[here]) choose(here);
     else choose(undefined);
+    // the panel was built after the browser jumped to #start: jump again now that the page is laid out
+    if (location.hash === "#start") document.getElementById("start").scrollIntoView();
     const toRequest = e => { if (e) e.preventDefault(); choose(""); document.getElementById("start").scrollIntoView({ behavior: "smooth" }); };
     window.addEventListener("hashchange", () => { if (location.hash === "#request") toRequest(); });
     for (const a of document.querySelectorAll("a[data-request]")) a.addEventListener("click", toRequest);
