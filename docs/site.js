@@ -44,12 +44,15 @@
     after: [
       "Within minutes a bot labels the issue and replies with what rmpp-hwr can do for the language today " +
         "(recognition, ink, typing).",
-      "It opens a pull request that adds the language to this site and gives it its own join form.",
-      "The sentences you sent are checked automatically (spelling, content, personal data); those that pass become " +
-        "its first practice texts, next to public domain or openly licensed ones.",
-      "When a maintainer merges it, the language appears in the list above: join and write your first notebook. " +
-        "Subscribe to your issue to hear when.",
+      "The language starts collecting practice sentences: yours and anyone else's, each checked automatically " +
+        "(spelling, content, personal data).",
+      "When 100 have passed, its join form opens and it appears in the list above: join and write your first " +
+        "notebook. Subscribe to your issue to hear when.",
     ],
+    collectSub: "{n}/{goal} sentences",
+    collectH: "{lang}: collecting sentences",
+    collectHow: "{lang} opens for joining when {goal} practice sentences have passed the checks ({n} so far). " +
+      "Send some in {lang}:",
     table: ["Language", "Writers", "Pages", "Lines"],
   };
 
@@ -183,6 +186,16 @@
       cards[c] = b;
       pick.append(b);
     }
+    // languages collecting their first practice sentences (requested, not open yet), most sentences first
+    for (const c of collecting().sort((a, b) => texts(b) - texts(a))) {
+      const b = el("button", { type: "button", class: "collecting", "aria-pressed": "false", lang: c },
+        el("span", { class: "native", text: native(c) }),
+        el("span", { class: "sub", text: [local(c) !== native(c) ? local(c) : "",
+          T("collectSub", { n: nf.format(texts(c)), goal: GOAL() })].filter(Boolean).join(" · ") }));
+      b.addEventListener("click", () => choose(c));
+      cards[c] = b;
+      pick.append(b);
+    }
     other = el("button", { type: "button", class: "other", "aria-pressed": "false" },
       el("span", { class: "native", text: T("notListed") }), el("span", { class: "sub", text: T("askForIt") }));
     other.addEventListener("click", () => choose(""));
@@ -204,6 +217,7 @@
     if (langs[lc]) for (const a of document.querySelectorAll("a[data-join]")) a.href = NEW + `join-${lc}.yml`;
     if (c === undefined) { next.replaceChildren(el("p", { class: "hint", text: T("pickFirst") })); return; }
     if (c === "") { next.replaceChildren(request()); return; }
+    if (!langs[c]) { next.replaceChildren(collect(c)); return; }
     const name = label(c);
     const joinUrl = NEW + `join-${c}.yml`;
     // sentences for the practice texts, in this language (the same short form as a language request)
@@ -216,6 +230,19 @@
       el("p", { class: "small", text: T("joinHow") }),
       el("p", { class: "small" }, el("a", { href: "#join", text: T("next") })),
       el("p", { class: "small", text: T("sendWhy"), style: "margin-top:14px" }), el("p", {}, sendBtn), slot));
+  }
+
+  // A requested language that is not open yet: how far its sentences are, and the form to send more.
+  const texts = c => ((stats && stats.texts) || {})[c] || 0;
+  const GOAL = () => (stats && stats.texts_goal) || 100;
+  const collecting = () => Object.keys((stats && stats.texts) || {}).filter(c => !langs[c]);
+  function collect(c) {
+    const n = texts(c), name = local(c);
+    return el("div", { class: "panel" },
+      el("h3", { text: T("collectH", { lang: name }) }),
+      el("progress", { max: GOAL(), value: Math.min(n, GOAL()), style: "width:100%;accent-color:var(--accent)" }),
+      el("p", { class: "small", text: T("collectHow", { lang: name, n: nf.format(n), goal: GOAL() }) }),
+      form(c, "", "send"));
   }
 
   function toRequest(e) {
@@ -257,6 +284,8 @@
         const b = el("button", { type: "button", class: "btn", text: T("joinBtn", { lang: label(c) }) });
         b.addEventListener("click", () => use(c, true));
         out.replaceChildren(el("p", { text: T("reqAlready", { lang: label(c) }) }), el("p", {}, b));
+      } else if (c && texts(c)) {
+        out.replaceChildren(collect(c));                // asked for already: help it reach the goal
       } else if (c || t) {
         out.replaceChildren(form(c, t, "request"));
       } else {

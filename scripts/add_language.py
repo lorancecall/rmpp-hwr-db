@@ -1,5 +1,5 @@
-"""Register a new language (after an accepted "Add a language" issue): languages.json entry (the site lists it
-and can be shown in it) and its own join form, so the site grows with every language.
+"""Register a new language (run by .github/workflows/sentences.yml once it has 100 practice sentences):
+languages.json entry (the site lists it and can be shown in it) and its own join form.
 
   python scripts/add_language.py CODE NAME NATIVE [--mix CODE,en,digits]
 

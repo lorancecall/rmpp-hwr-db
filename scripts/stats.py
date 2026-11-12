@@ -33,9 +33,13 @@ for f in sorted(Path("data").glob("*/*/*/page-*.json")):
                 L["char_samples"] += 1
                 chars[cl["char"]] += 1
 hangul = [c for c in chars if "가" <= c <= "힣"]
+# practice sentences per language (texts/<code>.tsv): a language not supported yet opens at 100 (sentences.py)
+texts = {f.stem: sum(1 for l in f.read_text(encoding="utf-8").splitlines() if l and not l.startswith("#"))
+         for f in sorted(Path("texts").glob("*.tsv"))}
 print(json.dumps({
     "writers": len(writers), "sessions": len(sessions), "pages": pages, "lines": lines, "char_samples": cells,
     "distinct_chars": len(chars), "distinct_hangul": len(hangul), "page_kinds": dict(kinds),
     "top_chars": chars.most_common(30),
     "languages": {k: {**v, "writers": len(v["writers"])} for k, v in sorted(per_lang.items())},
+    "texts": texts, "texts_goal": 100,
 }, ensure_ascii=False, indent=1))
