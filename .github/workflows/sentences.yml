@@ -1,0 +1,70 @@
+name: Practice sentences
+
+# Sentences sent from the site's short forms (docs/site.js): a "[sentences]" issue for a supported language, or a
+# language request with sentences. scripts/sentences.py checks every line (length, duplicates, personal data, script,
+# offensive words, spelling with LanguageTool) and appends those that pass to texts/<code>.tsv, committed to main;
+# the issue gets a comment with the result per line. Editing the issue checks it again (lines already added count
+# as duplicates).
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: practice-sentences           # one run at a time: every run appends to texts/
+  cancel-in-progress: false
+
+jobs:
+  check:
+    if: >-
+      contains(github.event.issue.body, 'rmpp-hwr-db:sentences') ||
+      (contains(github.event.issue.body, 'rmpp-hwr-db:language-request') && contains(github.event.issue.body, '### Practice sentences'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - id: check
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: python scripts/sentences.py check
+      - name: Commit the accepted sentences
+        if: steps.check.outputs.added != '0'
+        env:
+          CODE: ${{ steps.check.outputs.code }}
+          ADDED: ${{ steps.check.outputs.added }}
+          NUM: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add texts
+          git commit -q -m "Practice sentences: $ADDED for $CODE from #$NUM"
+          for i in 1 2 3; do
+            git push -q origin HEAD:main && exit 0
+            git pull -q --rebase origin main
+          done
+          exit 1
+      - name: Label and reply
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CODE: ${{ steps.check.outputs.code }}
+          NUM: ${{ github.event.issue.number }}
+          SENT: ${{ contains(github.event.issue.body, 'rmpp-hwr-db:sentences') }}
+        run: |
+          gh label create sentences -R "$GITHUB_REPOSITORY" --color FBCA04 --description "Practice sentences" 2>/dev/null || true
+          labels="sentences"
+          if [ -n "$CODE" ]; then
+            gh label create "lang:$CODE" -R "$GITHUB_REPOSITORY" --color C5DEF5 2>/dev/null || true
+            labels="$labels,lang:$CODE"
+          fi
+          gh issue edit "$NUM" -R "$GITHUB_REPOSITORY" --add-label "$labels"
+          [ -s comment.md ] && gh issue comment "$NUM" -R "$GITHUB_REPOSITORY" --body-file comment.md
+          # a sentences issue is done once checked (a language request stays open for its own steps)
+          if [ "$SENT" = "true" ] && [ "${{ steps.check.outputs.checked }}" = "yes" ]; then
+            gh issue close "$NUM" -R "$GITHUB_REPOSITORY" --reason completed
+          fi

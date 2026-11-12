@@ -14,6 +14,11 @@ strokes (coordinates, pressure, width). The data is used for line- and character
   in `data/<code>/`. Supported: [languages.json](languages.json). Your language is missing? Use the
   ["Add a language" form](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml); an accepted
   language gets its practice texts, its data folder and its own page on the site (`scripts/add_language.py`).
+- **Practice sentences**: anyone can send proverbs or sentences in their language from the site (a short form that
+  opens an issue). `scripts/sentences.py` checks every line (length, duplicates, personal data, script, offensive
+  words from [LDNOOBW](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words), spelling
+  and grammar with [LanguageTool](https://languagetool.org/) where it knows the language) and the workflow adds those
+  that pass to `texts/<code>.tsv` (CC BY 4.0, with the issue number of each line).
 - **Format**: [FORMAT.md](FORMAT.md)
 - **Hugging Face mirror**: https://huggingface.co/datasets/lorancecall/rmpp-hwr-db
 

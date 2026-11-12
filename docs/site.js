@@ -20,6 +20,7 @@
     en: {
       add: "+ Add your language",
       digitsOnly: "English + digits",
+      digits: "digits",
       writers: n => (n === 1 ? "1 writer" : `${nf.format(n)} writers`),
       notListed: "My language isn't listed", askForIt: "Ask for it",
       pickFirst: "Pick the language you will write to see its join form.",
@@ -29,6 +30,8 @@
         "a bot confirms in a minute and gives you the issue number for the next steps.",
       guide: L => `Read this guide in ${L}`,
       next: "Then follow \"How to take part\" below.",
+      sendBtn: L => `Send sentences in ${L}`,
+      sendWhy: "No tablet, or want to help more? Send proverbs or sentences for the practice notebooks.",
       reqH: "Ask for your language",
       reqIntro: "Search your language by name or two-letter code.",
       reqLabel: "Your language",
@@ -42,7 +45,8 @@
         "Within minutes a bot labels the issue and replies with what rmpp-hwr can do for the language today " +
           "(recognition, ink, typing).",
         "It opens a pull request that adds the language's page on this site and its own join form.",
-        "Practice texts are prepared (public domain or openly licensed); sources you know help, write them in the issue.",
+        "The sentences you sent are checked automatically (spelling, content, personal data); those that pass become " +
+          "its first practice texts, next to public domain or openly licensed ones.",
         "When a maintainer merges it, the language appears in the list above: join and write your first notebook. " +
           "Subscribe to your issue to hear when.",
       ],
@@ -50,6 +54,7 @@
     ko: {
       add: "+ 언어 추가 요청",
       digitsOnly: "영어 + 숫자",
+      digits: "숫자",
       writers: n => `참여자 ${nf.format(n)}명`,
       notListed: "목록에 내 언어가 없어요", askForIt: "언어 추가 요청",
       pickFirst: "손글씨로 쓸 언어를 고르면 그 언어의 참여 신청 양식이 나옵니다.",
@@ -59,6 +64,8 @@
         "다음 단계에 쓸 이슈 번호를 알려 줍니다.",
       guide: L => `${L} 안내 페이지 보기`,
       next: "그다음 아래 \"참여 방법\"을 따라 하세요.",
+      sendBtn: L => `${L} 문장 보내기`,
+      sendWhy: "태블릿이 없거나 더 돕고 싶다면, 연습 노트에 쓸 속담이나 문장을 보내 주세요.",
       reqH: "언어 추가 요청",
       reqIntro: "언어 이름이나 두 글자 코드로 찾아보세요.",
       reqLabel: "내 언어",
@@ -71,7 +78,7 @@
       after: [
         "몇 분 안에 봇이 이슈에 언어 라벨을 달고, 지금 rmpp-hwr이 그 언어로 할 수 있는 것(인식, 잉크, 입력)을 댓글로 알려 줍니다.",
         "봇이 이 사이트의 언어 페이지와 그 언어의 참여 신청 양식을 추가하는 PR을 엽니다.",
-        "연습 문장(퍼블릭 도메인이나 공개 라이선스)을 준비합니다. 아는 출처가 있으면 이슈에 적어 주세요.",
+        "보낸 문장은 자동으로 검사하고(맞춤법, 내용, 개인 정보), 통과한 문장은 퍼블릭 도메인·공개 라이선스 문장과 함께 첫 연습 문장이 됩니다.",
         "관리자가 PR을 합치면 위 목록에 언어가 나타납니다. 참여 신청하고 첫 노트를 쓰면 됩니다. 이슈를 구독하면 알림을 받습니다.",
       ],
     },
@@ -167,15 +174,26 @@
       if (c === undefined) { next.replaceChildren(el("p", { class: "hint", text: T.pickFirst })); return; }
       if (c === "") { next.replaceChildren(request(langs, choose)); return; }
       const name = label(langs, c);
-      const form = NEW + `join-${c}.yml`;
-      for (const a of document.querySelectorAll("a[data-join]")) a.href = form;
+      const joinUrl = NEW + `join-${c}.yml`;
+      for (const a of document.querySelectorAll("a[data-join]")) a.href = joinUrl;
+      // "Get a practice notebook": the command for this language and what its notebook mixes
+      const cmd = document.getElementById("cmd-practice");
+      if (cmd) {
+        const mix = (langs[c].mix || [c, "en", "digits"]).map(m => (m === "digits" ? T.digits : local(m)));
+        cmd.textContent = `hwr practice --v2 --lang ${c}    # ${mix.join(" + ")}`;
+      }
       const guide = c !== here && langs[c].page !== undefined
         ? el("a", { class: "btn secondary", href: root + langs[c].page + "#start", text: T.guide(name) }) : null;
+      // sentences for the practice texts, in this language (the same short form as a language request)
+      const slot = el("div");
+      const sendBtn = el("button", { type: "button", class: "btn secondary", text: T.sendBtn(name) });
+      sendBtn.addEventListener("click", () => { slot.replaceChildren(form(c, "", "send")); sendBtn.style.display = "none"; });
       next.replaceChildren(el("div", { class: "panel" },
         el("h3", { text: T.joinH(name) }),
-        el("p", {}, el("a", { class: "btn", href: form, text: T.joinBtn(name) }), guide),
+        el("p", {}, el("a", { class: "btn", href: joinUrl, text: T.joinBtn(name) }), guide),
         el("p", { class: "small", text: T.joinHow }),
-        el("p", { class: "small" }, el("a", { href: "#join", text: T.next }))));
+        el("p", { class: "small" }, el("a", { href: "#join", text: T.next })),
+        el("p", { class: "small", text: T.sendWhy, style: "margin-top:14px" }), el("p", {}, sendBtn), slot));
       if (user) try { history.replaceState(null, "", "?lang=" + c + "#start"); } catch (e) {}
     }
 
@@ -224,7 +242,7 @@
         b.addEventListener("click", () => choose(c, true));
         out.replaceChildren(el("p", { text: T.reqAlready(label(langs, c)) }), el("p", {}, b));
       } else if (c || t) {
-        out.replaceChildren(form(c, t));
+        out.replaceChildren(form(c, t, "request"));
       } else {
         out.replaceChildren();
       }
@@ -242,8 +260,12 @@
       el("p", { class: "small" }, el("a", { href: issues("is:open label:language-request"), text: T.reqAllOpen })));
   }
 
-  // The request form for language c (or free text t when the search found no code).
-  function form(c, t) {
+  // The short form for language c (or free text t when the search found no code), in that language when
+  // request-form.json has it (else this page's language, else English). mode "request": a language that is not
+  // supported yet; mode "send": sentences for a supported language. Both open a blank GitHub issue with title and body
+  // filled in (English headings + a marker the workflows read): no issue template per language.
+  function form(c, t, mode) {
+    const send = mode === "send";
     const own = c && forms[c];
     const tl = own ? c : forms[here] ? here : "en";
     const F = Object.assign({}, forms.en || {}, forms[tl] || {});
@@ -251,33 +273,58 @@
     const fill = s => (s || "").split("{lang}").join(name);
     const en = c ? english(c) : t, nat = c ? native(c) : "";
     const both = nat && nat !== en ? `${en} / ${nat}` : en;
-    const writer = el("input", { type: "checkbox", id: "req-writer" });
-    const notes = el("textarea", { id: "req-notes", rows: "3", maxlength: "1500" });
-    notes.style.cssText = "font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);" +
-      "border-radius:8px;padding:9px 12px;width:100%";
-    const go = el("a", { class: "btn", text: fill(F.submit), target: "_blank", rel: "noopener" });
-    const link = () => {
-      const body = ["<!-- rmpp-hwr-db:language-request -->",
-        "### Language", "", c ? `${both} (${c})` : "_No response_", "",
-        "### Other language", "", c ? "_No response_" : t, "",
-        "### Contributing", "",
-        `- [${writer.checked ? "x" : " "}] I have a reMarkable Paper Pro and would write practice pages in this language.`, "",
-        "### Notes", "", notes.value.trim() || "_No response_", ""].join("\n");
-      const title = `[language] ${both}${c ? ` (${c})` : ""}`;
-      go.href = `${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+    const area = (id, rows, max) => {
+      const x = el("textarea", { id, rows, maxlength: max });
+      x.style.cssText = "font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);" +
+        "border-radius:8px;padding:9px 12px;width:100%";
+      return x;
     };
-    writer.addEventListener("change", link);
-    notes.addEventListener("input", link);
+    const writer = el("input", { type: "checkbox", id: "req-writer" });
+    const lines = area("req-sentences", "8", "3000");
+    const notes = area("req-notes", "3", "1500");
+    const go = el("a", { class: "btn", text: fill(F.submit), target: "_blank", rel: "noopener" });
+    const copied = el("p", { class: "small", text: fill(F.copied), hidden: "" });
+    const LIMIT = 7000;                                  // GitHub refuses very long issue links
+    let tooLong = false;
+    const link = () => {
+      const said = lines.value.split("\n").map(x => x.trim()).filter(Boolean).join("\n");
+      const build = sentences => (send
+        ? ["<!-- rmpp-hwr-db:sentences -->", "### Language", "", `${both} (${c})`, "",
+           "### Practice sentences", "", sentences || "_No response_", ""]
+        : ["<!-- rmpp-hwr-db:language-request -->",
+           "### Language", "", c ? `${both} (${c})` : "_No response_", "",
+           "### Other language", "", c ? "_No response_" : t, "",
+           "### Practice sentences", "", sentences || "_No response_", "",
+           "### Contributing", "",
+           `- [${writer.checked ? "x" : " "}] I have a reMarkable Paper Pro and would write practice pages in this language.`, "",
+           "### Notes", "", notes.value.trim() || "_No response_", ""]).join("\n");
+      const title = `[${send ? "sentences" : "language"}] ${both}${c ? ` (${c})` : ""}`;
+      const url = body => `${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+      let href = url(build(said));
+      tooLong = href.length > LIMIT;
+      if (tooLong) href = url(build("<!-- paste the sentences here (they are on the clipboard) -->"));
+      go.href = href;
+    };
+    go.addEventListener("click", () => {
+      if (!tooLong) return;
+      const said = lines.value.split("\n").map(x => x.trim()).filter(Boolean).join("\n");
+      try { navigator.clipboard.writeText(said); } catch (e) {}
+      copied.hidden = false;
+    });
+    for (const x of [writer, lines, notes]) x.addEventListener(x === writer ? "change" : "input", link);
     link();
     const kids = [
-      el("h3", { text: fill(F.title), style: "margin-top:16px" }),
-      el("p", { class: "small", text: fill(F.intro) }),
-      el("label", { style: "font-weight:400;display:flex;gap:8px;align-items:flex-start" }, writer, el("span", { text: fill(F.writer) })),
-      el("label", { for: "req-notes", text: fill(F.notes) }), notes,
-      el("p", {}, go)];
+      el("h3", { text: fill(send ? F.sendTitle : F.title), style: "margin-top:16px" }),
+      el("p", { class: "small", text: fill(send ? F.sendIntro : F.intro) })];
+    if (!send) kids.push(el("label", { style: "font-weight:400;display:flex;gap:8px;align-items:flex-start" },
+      writer, el("span", { text: fill(F.writer) })));
+    kids.push(el("label", { for: "req-sentences", text: fill(F.sentences) }),
+      el("p", { class: "small", text: fill(F.sentencesHint) }), lines);
+    if (!send) kids.push(el("label", { for: "req-notes", text: fill(F.notes) }), notes);
+    kids.push(el("p", {}, go), copied);
     if (F.review && own) kids.push(el("p", { class: "small", text: F.review }));
-    if (c) kids.push(el("p", { class: "small", lang: here }, el("a", { href: issues(`label:"lang:${c}"`), text: T.reqOpen(local(c)) })));
-    else kids.push(el("p", { class: "small", lang: here, text: T.reqFreeNote }));
+    if (!send && c) kids.push(el("p", { class: "small", lang: here }, el("a", { href: issues(`label:"lang:${c}"`), text: T.reqOpen(local(c)) })));
+    else if (!send) kids.push(el("p", { class: "small", lang: here, text: T.reqFreeNote }));
     return el("div", { lang: tl }, ...kids);
   }
 
