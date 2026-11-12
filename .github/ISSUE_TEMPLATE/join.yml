@@ -11,7 +11,7 @@ body:
 
         This issue is **public**: do not write your name, contact details or any personal information here.
 
-        reMarkable Paper Pro로 쓴 손글씨를 공개 데이터셋에 기여하기 위한 신청입니다. 안내: https://lorancecall.github.io/rmpp-hwr-db/ko/
+        reMarkable Paper Pro로 쓴 손글씨를 공개 데이터셋에 기여하기 위한 신청입니다. 안내: https://lorancecall.github.io/rmpp-hwr-db/?lang=ko
         이 이슈는 **공개**됩니다. 이름, 연락처 같은 개인 정보는 적지 마세요.
   - type: dropdown
     id: language
