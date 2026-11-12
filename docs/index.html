@@ -38,10 +38,15 @@ ol.steps > li > strong:first-child { display: block; margin-bottom: 2px; }
 .note { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; color: var(--muted); }
 .btn { display: inline-block; background: var(--accent); color: var(--bg); text-decoration: none; padding: 10px 18px;
   border-radius: 8px; font-weight: 600; margin: 4px 8px 4px 0; }
-.btn.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+.btn { border: 1px solid var(--accent); font: inherit; font-weight: 600; cursor: pointer; line-height: 1.5; }
+.btn.secondary { background: transparent; color: var(--accent); }
 table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
 th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
 footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
+.langs { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 24px; font-size: 0.95rem; min-height: 1.7em; }
+.langs a { color: var(--muted); text-decoration: none; }
+.langs a:hover, .langs a.on { color: var(--fg); text-decoration: underline; }
+.langs b { color: var(--fg); border-bottom: 2px solid var(--fg); }
 .by-lang { margin: 4px 0 8px; }
 .by-lang .num { text-align: right; font-variant-numeric: tabular-nums; }
 .start { margin: 8px 0 28px; }
@@ -73,14 +78,16 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 </head>
 <body>
 <main data-root="./">
+<nav class="langs" id="langs" aria-label="Languages"></nav>
 <h1 data-t="h1">Join the open handwriting dataset</h1>
 <p data-t="lead" class="lead">Handwriting written on the reMarkable Paper Pro, in many languages plus English and digits, collected
 as an open dataset for handwriting recognition data and models anyone can use.</p>
 
 <section class="start" id="start" aria-labelledby="start-h">
-<h2 data-t="start-h" id="start-h">Choose your language</h2>
-<p data-t="hint" class="hint">The language you will write. Each practice notebook mixes it with English and digits.</p>
-<!-- site.js rebuilds #pick from languages.json; these links are the fallback without JavaScript -->
+<h2 data-t="start-h" id="start-h">Take part</h2>
+<p data-t="hint" class="hint">You write the language chosen at the top of the page; each practice notebook mixes it
+with English and digits.</p>
+<!-- without JavaScript: these links (site.js removes them and shows the panel for the page's language) -->
 <div class="pick" id="pick">
   <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join-en.yml"><span class="native">English</span><span class="sub">English + digits</span></a>
   <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join-ko.yml" lang="ko"><span class="native">한국어</span><span class="sub">Korean</span></a>
