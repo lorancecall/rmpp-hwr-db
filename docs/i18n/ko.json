@@ -1,7 +1,6 @@
 {
  "title": "rmpp-hwr-db 참여 안내",
  "description": "reMarkable Paper Pro 한국어·영어·숫자 손글씨 공개 데이터셋 참여 안내",
- "nav": "언어",
  "byLang": "언어별 참여자",
  "page": {
   "h1": "손글씨 공개 데이터셋에 참여하기",
@@ -48,7 +47,6 @@
   "lead": "reMarkable Paper Pro로 쓴 손글씨를 여러 언어와 영어, 숫자로 모아, 누구나 쓸 수 있는 손글씨 인식 데이터와 모델을 만듭니다."
  },
  "ui": {
-  "add": "+ 언어 추가 요청",
   "digitsOnly": "영어 + 숫자",
   "digits": "숫자",
   "writers": "참여자 {n}명",

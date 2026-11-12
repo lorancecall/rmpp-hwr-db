@@ -6,9 +6,12 @@
 <title>rmpp-hwr-db: join the handwriting dataset</title>
 <meta name="description" content="Open handwriting dataset from the reMarkable Paper Pro: how to take part">
 <style>
-:root { --bg: #fbfaf7; --fg: #1d1d1b; --muted: #66645e; --line: #dedbd3; --card: #ffffff; --accent: #2f5d50; --code: #f1efe9; }
+/* black and white, like the tablet's paper display */
+:root { --bg: #ffffff; --fg: #111111; --muted: #666666; --line: #dddddd; --card: #ffffff; --accent: #111111; --code: #f3f3f3;
+  --picked: #f0f0f0; }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #161615; --fg: #ecebe6; --muted: #a3a19a; --line: #34332f; --card: #1f1f1d; --accent: #8cc3b2; --code: #262624; }
+  :root { --bg: #0f0f0f; --fg: #f2f2f2; --muted: #a0a0a0; --line: #303030; --card: #161616; --accent: #f2f2f2; --code: #1f1f1f;
+    --picked: #262626; }
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.7 -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif; }
@@ -39,8 +42,6 @@ ol.steps > li > strong:first-child { display: block; margin-bottom: 2px; }
 table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
 th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
 footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
-.langs { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 24px; font-size: 0.92rem; }
-.langs b { color: var(--fg); }
 .by-lang { margin: 4px 0 8px; }
 .by-lang .num { text-align: right; font-variant-numeric: tabular-nums; }
 .start { margin: 8px 0 28px; }
@@ -52,12 +53,12 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 .pick > :hover { border-color: var(--accent); }
 .pick > :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .pick > [aria-pressed="true"] { border: 2px solid var(--accent); padding: 11px 13px;
-  background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
+  background: var(--picked); }
 .pick .native { display: block; font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
 .pick .sub { display: block; color: var(--muted); font-size: 0.82rem; }
 .pick .other, .pick .collecting { border-style: dashed; }
 .pick .collecting .native { font-size: 1.05rem; }
-.pick .other .native { font-size: 1rem; color: var(--accent); }
+.pick .other .native { font-size: 1rem; }
 .panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 0 0 12px; }
 .panel h3 { margin: 0 0 6px; }
 .panel p { margin: 6px 0; }
@@ -72,7 +73,6 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 </head>
 <body>
 <main data-root="./">
-<nav class="langs" id="langs" aria-label="Languages"></nav>
 <h1 data-t="h1">Join the open handwriting dataset</h1>
 <p data-t="lead" class="lead">Handwriting written on the reMarkable Paper Pro, in many languages plus English and digits, collected
 as an open dataset for handwriting recognition data and models anyone can use.</p>
