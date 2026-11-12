@@ -1,10 +1,10 @@
 {
  "title": "rmpp-hwr-db 참여 안내",
- "description": "reMarkable Paper Pro 한국어·영어·숫자 손글씨 공개 데이터셋 참여 안내",
+ "description": "reMarkable 커뮤니티가 함께 만드는 여러 언어 손글씨 공개 데이터셋 참여 안내",
  "nav": "언어",
  "byLang": "언어별 참여자",
  "page": {
-  "h1": "손글씨 공개 데이터셋에 참여하기",
+  "h1": "reMarkable 커뮤니티가 함께 만드는 손글씨 공개 데이터셋",
   "start-h": "참여하기",
   "hint": "맨 위에서 고른 언어로 씁니다. 연습 노트는 이 언어에 영어와 숫자를 섞습니다.",
   "repo": "저장소 보기",
@@ -45,7 +45,7 @@
   "footer": "rmpp-hwr-db · 데이터 CC BY 4.0 · <a href=\"https://github.com/lorancecall/rmpp-hwr-db\">GitHub</a>",
   "stat-langs": "언어",
   "stat-hangul": "서로 다른 한글 음절",
-  "lead": "reMarkable Paper Pro로 쓴 손글씨를 여러 언어와 영어, 숫자로 모아, 누구나 쓸 수 있는 손글씨 인식 데이터와 모델을 만듭니다."
+  "lead": "reMarkable Paper Pro로 내 언어의 짧은 연습 노트를 쓰고 펜 획 그대로 공유해 주세요. 모두 공개(CC BY 4.0)되어 손글씨 인식, 노트 앱, 다른 기기, 연구 등 누구나 어디에든 쓸 수 있습니다."
  },
  "ui": {
   "add": "+ 언어 추가 요청",
