@@ -1,10 +1,13 @@
 name: Practice sentences
 
-# Sentences sent from the site's short forms (docs/site.js): a "[sentences]" issue for a supported language, or a
-# language request with sentences. scripts/sentences.py checks every line (length, duplicates, personal data, script,
-# offensive words, spelling with LanguageTool) and appends those that pass to texts/<code>.tsv, committed to main;
-# the issue gets a comment with the result per line. Editing the issue checks it again (lines already added count
-# as duplicates).
+# Sentences sent from the site's short forms (docs/site.js): a "[sentences]" issue, or a language request with
+# sentences. scripts/sentences.py checks every line (length, duplicates, personal data, script, offensive words,
+# spelling with LanguageTool) and appends those that pass to texts/<code>.tsv, committed to main; the issue gets a
+# comment with the result per line. Editing the issue checks it again (lines already added count as duplicates).
+#
+# A language that is not supported yet collects sentences first: when it reaches 100 (sentences.py GOAL), this
+# workflow registers it (scripts/add_language.py: languages.json entry, its join form) on main, so the site lists it
+# and people can join in it. The open requests for the language are told.
 on:
   issues:
     types: [opened, edited]
@@ -12,6 +15,7 @@ on:
 permissions:
   contents: write
   issues: write
+  actions: write                      # start the site's publish workflow (a bot push does not start it)
 
 concurrency:
   group: practice-sentences           # one run at a time: every run appends to texts/
@@ -33,19 +37,33 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: python scripts/sentences.py check
-      - name: Commit the accepted sentences
+      - name: Commit the accepted sentences (and open the language at 100)
+        id: commit
         if: steps.check.outputs.added != '0'
         env:
           CODE: ${{ steps.check.outputs.code }}
           ADDED: ${{ steps.check.outputs.added }}
+          READY: ${{ steps.check.outputs.ready }}
+          NAME: ${{ steps.check.outputs.name }}
+          NATIVE: ${{ steps.check.outputs.native }}
           NUM: ${{ github.event.issue.number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add texts
           git commit -q -m "Practice sentences: $ADDED for $CODE from #$NUM"
+          if [ "$READY" = "1" ]; then
+            python scripts/add_language.py "$CODE" "$NAME" "$NATIVE"
+            git add languages.json .github/ISSUE_TEMPLATE
+            git commit -q -m "Add language $CODE ($NAME / $NATIVE): $(grep -vc '^#' "texts/$CODE.tsv") practice sentences"
+            echo "opened=1" >> "$GITHUB_OUTPUT"
+          fi
           for i in 1 2 3; do
-            git push -q origin HEAD:main && exit 0
+            if git push -q origin HEAD:main; then
+              gh workflow run publish.yml -R "$GITHUB_REPOSITORY" --ref main || true
+              exit 0
+            fi
             git pull -q --rebase origin main
           done
           exit 1
@@ -53,8 +71,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CODE: ${{ steps.check.outputs.code }}
+          NAME: ${{ steps.check.outputs.name }}
           NUM: ${{ github.event.issue.number }}
           SENT: ${{ contains(github.event.issue.body, 'rmpp-hwr-db:sentences') }}
+          OPENED: ${{ steps.commit.outputs.opened }}
         run: |
           gh label create sentences -R "$GITHUB_REPOSITORY" --color FBCA04 --description "Practice sentences" 2>/dev/null || true
           labels="sentences"
@@ -64,7 +84,15 @@ jobs:
           fi
           gh issue edit "$NUM" -R "$GITHUB_REPOSITORY" --add-label "$labels"
           [ -s comment.md ] && gh issue comment "$NUM" -R "$GITHUB_REPOSITORY" --body-file comment.md
-          # a sentences issue is done once checked (a language request stays open for its own steps)
+          # the language just opened: tell its requests, which are done now
+          if [ "$OPENED" = "1" ]; then
+            msg="$NAME has 100 practice sentences now, so it is open for joining: https://lorancecall.github.io/rmpp-hwr-db/?lang=$CODE#start (the site updates in a few minutes). / 문장 100개가 모여 참여 신청을 시작했습니다."
+            for n in $(gh issue list -R "$GITHUB_REPOSITORY" -l language-request -l "lang:$CODE" --state open --json number -q '.[].number'); do
+              gh issue comment "$n" -R "$GITHUB_REPOSITORY" --body "$msg"
+              gh issue close "$n" -R "$GITHUB_REPOSITORY" --reason completed
+            done
+          fi
+          # a sentences issue is done once checked (a language request stays open until its language opens)
           if [ "$SENT" = "true" ] && [ "${{ steps.check.outputs.checked }}" = "yes" ]; then
             gh issue close "$NUM" -R "$GITHUB_REPOSITORY" --reason completed
           fi

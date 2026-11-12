@@ -99,12 +99,13 @@ def check_issue(body):
         return code, name, native, (f"`{code}` ({known[code].get('name')}) is supported already: "
                                     f"https://lorancecall.github.io/rmpp-hwr-db/?lang={code} / "
                                     "이미 지원하는 언어입니다.\n\n" + tier(code)), False
-    return code, name, native, (f"Thanks! Requested: **{name} / {native}** (`{code}`). A pull request adds it to the "
-                                "site with its join form; practice texts follow after review. When it is merged, the "
-                                "language shows up at https://lorancecall.github.io/rmpp-hwr-db/#start and you can join. "
-                                "Subscribe to this issue for updates. / 요청 언어를 사이트와 참여 양식에 PR로 "
-                                "추가하고, 연습 문장은 검토 후 이어집니다. 합쳐지면 사이트의 언어 목록에 나타나 참여할 수 "
-                                "있습니다.\n\n" + tier(code)), True
+    return code, name, native, (f"Thanks! Requested: **{name} / {native}** (`{code}`). The language first collects "
+                                "100 practice sentences: send them from the site (\"My language isn't listed\", or "
+                                f"https://lorancecall.github.io/rmpp-hwr-db/?lang=en#request ) or edit this issue. When "
+                                f"100 have passed the checks, the join form in {name} opens on the site and this issue is "
+                                "closed. Subscribe to it for updates. / 새 언어는 먼저 연습 문장 100개를 모읍니다. "
+                                "검사를 통과한 문장이 100개가 되면 사이트에서 그 언어로 참여 신청이 열리고 이 이슈가 "
+                                "닫힙니다.\n\n" + tier(code)), True
 
 
 if __name__ == "__main__":

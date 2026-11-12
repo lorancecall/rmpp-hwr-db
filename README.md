@@ -12,8 +12,9 @@ strokes (coordinates, pressure, width). The data is used for line- and character
   [join form](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join.yml) still works)
 - **Languages**: a practice notebook mixes the writer's language + English + digits; the data of each language is
   in `data/<code>/`. Supported: [languages.json](languages.json). Your language is missing? Use the
-  ["Add a language" form](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml); an accepted
-  language gets its practice texts, its data folder and its place on the site (`scripts/add_language.py`).
+  ["Add a language" form](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml) (or "My
+  language isn't listed" on the site). A new language first collects 100 practice sentences; at 100 the sentences
+  workflow registers it (`scripts/add_language.py`: languages.json, its join form) and it opens for joining.
 - **Practice sentences**: anyone can send proverbs or sentences in their language from the site (a short form that
   opens an issue). `scripts/sentences.py` checks every line (length, duplicates, personal data, script, offensive
   words from [LDNOOBW](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words), spelling

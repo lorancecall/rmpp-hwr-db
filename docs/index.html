@@ -55,7 +55,8 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
   background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
 .pick .native { display: block; font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
 .pick .sub { display: block; color: var(--muted); font-size: 0.82rem; }
-.pick .other { border-style: dashed; }
+.pick .other, .pick .collecting { border-style: dashed; }
+.pick .collecting .native { font-size: 1.05rem; }
 .pick .other .native { font-size: 1rem; color: var(--accent); }
 .panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 0 0 12px; }
 .panel h3 { margin: 0 0 6px; }
@@ -121,8 +122,8 @@ the top shows this page in that language.</p>
 <p data-t="languages-2">Your language is missing? Ask for it with the
 <a data-request href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml">"Add a language" form</a> (or "My language isn't listed" at
 <a href="#start">the top</a>).
-Once the characters and the practice texts (newly written or public domain) are settled, the language gets its
-practice pages and its data folder, and it can be chosen on this page.</p>
+A new language first collects 100 practice sentences (sent by anyone, checked automatically); then its join form
+opens and it can be chosen on this page.</p>
 
 <h2 data-t="privacy-h">Privacy</h2>
 <ul data-t="privacy">
