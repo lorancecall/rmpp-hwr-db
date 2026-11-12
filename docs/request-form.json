@@ -3,7 +3,12 @@
  "en": {
   "title": "Request {lang}",
   "intro": "This opens a public GitHub issue for {lang}; press Submit there. Do not write personal information.",
+  "sendTitle": "Send sentences in {lang}",
+  "sendIntro": "About 10 proverbs or sentences for the practice notebooks. This opens a public GitHub issue; press Submit there. A bot checks every line (spelling, appropriate content, no personal information) and adds those that pass to the practice texts.",
   "writer": "I have a reMarkable Paper Pro and would write practice pages in {lang}.",
+  "sentences": "About 10 proverbs or sentences in {lang}",
+  "sentencesHint": "One per line, in the language's own script: well-known proverbs, or sentences you write yourself (you release them under CC BY 4.0). They become the first practice texts.",
+  "copied": "Long text: the sentences were copied to the clipboard; paste them into the issue on GitHub.",
   "notes": "Anything to add? (optional: characters to practise, sources of public domain texts)",
   "submit": "Continue on GitHub",
   "review": ""
@@ -11,7 +16,12 @@
  "ko": {
   "title": "{lang} 추가 요청",
   "intro": "{lang} 추가를 요청하는 공개 GitHub 이슈가 열립니다. GitHub에서 Submit을 누르세요. 개인 정보는 적지 마세요.",
+  "sendTitle": "{lang} 문장 보내기",
+  "sendIntro": "연습 노트에 쓸 속담이나 문장 10개 정도. 공개 GitHub 이슈가 열리면 Submit을 누르세요. 봇이 줄마다 맞춤법, 부적절한 내용, 개인 정보를 검사해 통과한 문장을 연습 문장에 추가합니다.",
   "writer": "reMarkable Paper Pro가 있고 {lang}로 연습 페이지를 쓸 수 있습니다.",
+  "sentences": "{lang} 속담이나 문장 10개 정도",
+  "sentencesHint": "한 줄에 하나씩, 그 언어의 문자로 써 주세요. 잘 알려진 속담이나 직접 쓴 문장(CC BY 4.0으로 공개됩니다). 첫 연습 문장으로 쓰입니다.",
+  "copied": "글이 길어 문장을 클립보드에 복사했습니다. GitHub 이슈에 붙여 넣어 주세요.",
   "notes": "덧붙일 말 (선택: 연습할 글자, 퍼블릭 도메인 문장 출처)",
   "submit": "GitHub에서 계속하기",
   "review": ""
@@ -19,7 +29,12 @@
  "ja": {
   "title": "{lang}の追加をリクエスト",
   "intro": "{lang}の追加をリクエストする公開 GitHub Issue が開きます。GitHub で Submit を押してください。個人情報は書かないでください。",
+  "sendTitle": "{lang}の文を送る",
+  "sendIntro": "練習ノート用のことわざや文を10個ほど。公開 GitHub Issue が開くので Submit を押してください。ボットが1行ずつ（つづり、不適切な内容、個人情報）を確認し、通過した文を練習用文章に追加します。",
   "writer": "reMarkable Paper Pro を持っていて、{lang}で練習ページを書けます。",
+  "sentences": "{lang}のことわざや文を10個ほど",
+  "sentencesHint": "1行に1つ、その言語の文字で。よく知られたことわざや、自分で書いた文（CC BY 4.0 で公開されます）。最初の練習用文章になります。",
+  "copied": "長いため、文をクリップボードにコピーしました。GitHub の Issue に貼り付けてください。",
   "notes": "補足（任意：練習する文字、パブリックドメインの文章の出典）",
   "submit": "GitHub で続ける",
   "review": "機械翻訳です。修正を歓迎します。"
@@ -27,7 +42,12 @@
  "zh": {
   "title": "申请添加{lang}",
   "intro": "将打开一个申请添加{lang}的公开 GitHub Issue，请在 GitHub 上点击 Submit。请不要填写个人信息。",
+  "sendTitle": "提交{lang}句子",
+  "sendIntro": "为练习本提供约 10 条谚语或句子。将打开一个公开 GitHub Issue，请点击 Submit。机器人会逐行检查（拼写、不当内容、个人信息），并把通过的句子加入练习文本。",
   "writer": "我有 reMarkable Paper Pro，可以用{lang}书写练习页。",
+  "sentences": "约 10 条{lang}谚语或句子",
+  "sentencesHint": "每行一条，用该语言的文字书写：广为人知的谚语，或你自己写的句子（将以 CC BY 4.0 公开）。它们会成为最初的练习文本。",
+  "copied": "内容较长，句子已复制到剪贴板，请粘贴到 GitHub Issue 中。",
   "notes": "补充说明（可选：要练习的字符、公有领域文本的来源）",
   "submit": "在 GitHub 上继续",
   "review": "机器翻译，欢迎指正。"
@@ -35,7 +55,12 @@
  "zh-hant": {
   "title": "申請新增{lang}",
   "intro": "將開啟一個申請新增{lang}的公開 GitHub Issue，請在 GitHub 上點擊 Submit。請不要填寫個人資訊。",
+  "sendTitle": "提交{lang}句子",
+  "sendIntro": "為練習本提供約 10 條諺語或句子。將開啟一個公開 GitHub Issue，請點擊 Submit。機器人會逐行檢查（拼寫、不當內容、個人資訊），並把通過的句子加入練習文本。",
   "writer": "我有 reMarkable Paper Pro，可以用{lang}書寫練習頁。",
+  "sentences": "約 10 條{lang}諺語或句子",
+  "sentencesHint": "每行一條，用該語言的文字書寫：廣為人知的諺語，或你自己寫的句子（將以 CC BY 4.0 公開）。它們會成為最初的練習文本。",
+  "copied": "內容較長，句子已複製到剪貼簿，請貼到 GitHub Issue 中。",
   "notes": "補充說明（選填：要練習的字元、公有領域文本的來源）",
   "submit": "在 GitHub 上繼續",
   "review": "機器翻譯，歡迎指正。"
@@ -43,7 +68,12 @@
  "de": {
   "title": "{lang} anfragen",
   "intro": "Das öffnet ein öffentliches GitHub-Issue für {lang}; klicke dort auf Submit. Bitte keine persönlichen Daten angeben.",
+  "sendTitle": "Sätze auf {lang} senden",
+  "sendIntro": "Etwa 10 Sprichwörter oder Sätze für die Übungshefte. Das öffnet ein öffentliches GitHub-Issue; klicke dort auf Submit. Ein Bot prüft jede Zeile (Rechtschreibung, angemessener Inhalt, keine persönlichen Daten) und übernimmt die bestandenen in die Übungstexte.",
   "writer": "Ich habe ein reMarkable Paper Pro und würde Übungsseiten auf {lang} schreiben.",
+  "sentences": "Etwa 10 Sprichwörter oder Sätze auf {lang}",
+  "sentencesHint": "Einer pro Zeile, in der Schrift der Sprache: bekannte Sprichwörter oder selbst geschriebene Sätze (du gibst sie unter CC BY 4.0 frei). Sie werden die ersten Übungstexte.",
+  "copied": "Langer Text: Die Sätze wurden in die Zwischenablage kopiert; füge sie im Issue auf GitHub ein.",
   "notes": "Noch etwas? (optional: zu übende Zeichen, Quellen gemeinfreier Texte)",
   "submit": "Weiter auf GitHub",
   "review": "Maschinell übersetzt; Korrekturen willkommen."
@@ -51,7 +81,12 @@
  "fr": {
   "title": "Demander : {lang}",
   "intro": "Cela ouvre une issue GitHub publique pour : {lang} ; cliquez sur Submit. N'écrivez aucune information personnelle.",
+  "sendTitle": "Envoyer des phrases ({lang})",
+  "sendIntro": "Une dizaine de proverbes ou de phrases pour les cahiers d'exercice. Cela ouvre une issue GitHub publique ; cliquez sur Submit. Un bot vérifie chaque ligne (orthographe, contenu approprié, aucune information personnelle) et ajoute celles qui passent aux textes d'exercice.",
   "writer": "J'ai une reMarkable Paper Pro et j'écrirais des pages d'exercice dans cette langue ({lang}).",
+  "sentences": "Une dizaine de proverbes ou de phrases ({lang})",
+  "sentencesHint": "Un par ligne, dans l'écriture de la langue : des proverbes connus ou des phrases que vous écrivez vous-même (publiées sous CC BY 4.0). Ce seront les premiers textes d'exercice.",
+  "copied": "Texte long : les phrases ont été copiées dans le presse-papiers ; collez-les dans l'issue sur GitHub.",
   "notes": "Autre chose ? (facultatif : caractères à pratiquer, sources de textes du domaine public)",
   "submit": "Continuer sur GitHub",
   "review": "Traduction automatique ; corrections bienvenues."
@@ -59,7 +94,12 @@
  "es": {
   "title": "Solicitar: {lang}",
   "intro": "Se abrirá una issue pública de GitHub para: {lang}; pulsa Submit allí. No escribas información personal.",
+  "sendTitle": "Enviar frases ({lang})",
+  "sendIntro": "Unos 10 refranes o frases para los cuadernos de práctica. Se abrirá una issue pública de GitHub; pulsa Submit allí. Un bot revisa cada línea (ortografía, contenido apropiado, sin información personal) y añade las que pasan a los textos de práctica.",
   "writer": "Tengo un reMarkable Paper Pro y escribiría páginas de práctica en este idioma ({lang}).",
+  "sentences": "Unos 10 refranes o frases ({lang})",
+  "sentencesHint": "Uno por línea, en la escritura del idioma: refranes conocidos o frases escritas por ti (se publican con CC BY 4.0). Serán los primeros textos de práctica.",
+  "copied": "Texto largo: las frases se copiaron al portapapeles; pégalas en la issue de GitHub.",
   "notes": "¿Algo más? (opcional: caracteres para practicar, fuentes de textos de dominio público)",
   "submit": "Continuar en GitHub",
   "review": "Traducción automática; se agradecen correcciones."
