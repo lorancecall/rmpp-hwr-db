@@ -55,7 +55,8 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
   background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
 .pick .native { display: block; font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
 .pick .sub { display: block; color: var(--muted); font-size: 0.82rem; }
-.pick .other { border-style: dashed; }
+.pick .other, .pick .collecting { border-style: dashed; }
+.pick .collecting .native { font-size: 1.05rem; }
 .pick .other .native { font-size: 1rem; color: var(--accent); }
 .panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 0 0 12px; }
 .panel h3 { margin: 0 0 6px; }
@@ -72,13 +73,13 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
 <body>
 <main data-root="./">
 <nav class="langs" id="langs" aria-label="Languages"></nav>
-<h1>Join the open handwriting dataset</h1>
-<p class="lead">Handwriting written on the reMarkable Paper Pro, in many languages plus English and digits, collected
+<h1 data-t="h1">Join the open handwriting dataset</h1>
+<p data-t="lead" class="lead">Handwriting written on the reMarkable Paper Pro, in many languages plus English and digits, collected
 as an open dataset for handwriting recognition data and models anyone can use.</p>
 
 <section class="start" id="start" aria-labelledby="start-h">
-<h2 id="start-h">Choose your language</h2>
-<p class="hint">The language you will write. Each practice notebook mixes it with English and digits.</p>
+<h2 data-t="start-h" id="start-h">Choose your language</h2>
+<p data-t="hint" class="hint">The language you will write. Each practice notebook mixes it with English and digits.</p>
 <!-- site.js rebuilds #pick from languages.json; these links are the fallback without JavaScript -->
 <div class="pick" id="pick">
   <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join-en.yml"><span class="native">English</span><span class="sub">English + digits</span></a>
@@ -87,21 +88,22 @@ as an open dataset for handwriting recognition data and models anyone can use.</
 </div>
 <div id="pick-next" aria-live="polite"></div>
 </section>
-<p><a class="btn secondary" href="https://github.com/lorancecall/rmpp-hwr-db">Repository</a></p>
+<p><a data-t="repo" class="btn secondary" href="https://github.com/lorancecall/rmpp-hwr-db">Repository</a></p>
 
 <div class="stats" id="stats" aria-live="polite">
-  <div class="stat"><b id="s-writers">–</b><span>writers</span></div>
-  <div class="stat"><b id="s-pages">–</b><span>pages</span></div>
-  <div class="stat"><b id="s-lines">–</b><span>lines</span></div>
-  <div class="stat"><b id="s-chars">–</b><span>character samples</span></div>
-  <div class="stat"><b id="s-langs">–</b><span>languages</span></div>
+  <div class="stat"><b id="s-writers">–</b><span data-t="stat-writers">writers</span></div>
+  <div class="stat"><b id="s-pages">–</b><span data-t="stat-pages">pages</span></div>
+  <div class="stat"><b id="s-lines">–</b><span data-t="stat-lines">lines</span></div>
+  <div class="stat"><b id="s-chars">–</b><span data-t="stat-chars">character samples</span></div>
+  <div class="stat"><b id="s-langs">–</b><span data-t="stat-langs">languages</span></div>
+  <div class="stat" data-only="ko" hidden><b id="s-hangul">–</b><span data-t="stat-hangul">distinct Hangul syllables</span></div>
 </div>
 <table class="by-lang" id="by-lang" aria-label="Writers per language"></table>
 
-<h2>What is collected</h2>
-<p>Handwriting on printed practice pages, stored <b>as pen strokes</b> (coordinates, pressure, width). There are
+<h2 data-t="collected-h">What is collected</h2>
+<p data-t="collected">Handwriting on printed practice pages, stored <b>as pen strokes</b> (coordinates, pressure, width). There are
 four kinds of pages:</p>
-<table>
+<table data-t="pages">
 <tr><th>Page</th><th>How to write</th></tr>
 <tr><td>Cells</td><td>One character per cell with a light cross guide (for scripts like Hangul, kana or Chinese
 characters). Cell sizes change per row, for different writing sizes.</td></tr>
@@ -109,22 +111,22 @@ characters). Cell sizes change per row, for different writing sizes.</td></tr>
 <tr><td>English four lines</td><td>English sentences on four guide lines.</td></tr>
 <tr><td>Free lines</td><td>Natural writing on a baseline; some lines quickly, like everyday notes.</td></tr>
 </table>
-<p>Every cell and line carries the text that was printed, so the data works for character-level and line-level
+<p data-t="collected-2">Every cell and line carries the text that was printed, so the data works for character-level and line-level
 training.</p>
 
-<h2 id="languages">Languages</h2>
-<p>Each practice notebook mixes <b>your language + English + digits</b> (English writers: English + digits), and the
-data of each language lives in its own folder <code>data/&lt;code&gt;/</code>. Supported now: see
-<a href="https://github.com/lorancecall/rmpp-hwr-db/blob/main/languages.json">languages.json</a>; each language
-also has its own page here (top of the page).</p>
-<p>Your language is missing? Ask for it with the
+<h2 data-t="languages-h" id="languages">Languages</h2>
+<p data-t="languages">Each practice notebook mixes <b>your language + English + digits</b> (English writers: English + digits), and the
+data of each language lives in its own folder <code>data/&lt;code&gt;/</code>. Supported languages are in
+<a href="https://github.com/lorancecall/rmpp-hwr-db/blob/main/languages.json">languages.json</a>; choosing one at
+the top shows this page in that language.</p>
+<p data-t="languages-2">Your language is missing? Ask for it with the
 <a data-request href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=language.yml">"Add a language" form</a> (or "My language isn't listed" at
 <a href="#start">the top</a>).
-Once the characters and the practice texts (newly written or public domain) are settled, the language gets its
-practice pages, its data folder and its own page on this site.</p>
+A new language first collects 100 practice sentences (sent by anyone, checked automatically); then its join form
+opens and it can be chosen on this page.</p>
 
-<h2>Privacy</h2>
-<ul>
+<h2 data-t="privacy-h">Privacy</h2>
+<ul data-t="privacy">
 <li>The data holds a <b>random writer id</b>, the practice template and the pen strokes. No names, accounts, device
 information, document names or times.</li>
 <li>Only the sentences printed on the practice pages are written; personal notes are never uploaded.</li>
@@ -134,12 +136,12 @@ phone numbers.</li>
 GitHub account for this project.</li>
 </ul>
 
-<h2 id="join">How to take part</h2>
+<h2 data-t="join-h" id="join">How to take part</h2>
 <ol class="steps">
-<li><strong>What you need</strong>
+<li data-t="step1"><strong>What you need</strong>
 A reMarkable Paper Pro with developer mode on, a computer (Windows, macOS, Linux), a GitHub account and the
 <a href="https://cli.github.com/">GitHub CLI (gh)</a>. Log in once with <code>gh auth login</code>.</li>
-<li><strong>Install rmpp-hwr</strong>
+<li data-t="step2"><strong>Install rmpp-hwr</strong>
 The tablet needs <code>rmpp-preload</code> from <a href="https://github.com/lorancecall/rmpp-packages">rmpp-packages</a>
 (<code>vellum add rmpp-preload</code>). Then on the computer:
 <pre><code>git clone https://github.com/lorancecall/rmpp-hwr
@@ -148,29 +150,29 @@ cp .env.example .env      # the tablet's address, your language (HWR_LANG)
 tools/hwr install</code></pre>
 Details: <a href="https://github.com/lorancecall/rmpp-hwr#install">rmpp-hwr install guide</a>. Run
 <code>tools/hwr install</code> again after a tablet OS update.</li>
-<li><strong>Join (consent)</strong>
+<li data-t="step3"><strong>Join (consent)</strong>
 Open the <a data-join href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join-en.yml">join form for your language</a> (pick it at
 <a href="#start">the top of the page</a>) and tick the five consent items. When the confirmation comment appears, note the <b>issue number</b>.</li>
-<li><strong>Get a practice notebook</strong>
+<li data-t="step4"><strong>Get a practice notebook</strong>
 <pre><code id="cmd-practice">hwr practice --v2 --lang en    # English + digits
 hwr practice --v2 --lang ko    # Korean + English + digits</code></pre>
 A notebook <code>rmpp-practice-v2-…</code> (8 pages) appears in the tablet folder <code>hwr-db/&lt;language&gt;</code>.</li>
-<li><strong>Write</strong>
+<li data-t="step5"><strong>Write</strong>
 Follow the line at the top of each page: one character per cell, not far outside it. Your <b>usual handwriting</b>
 helps most. Erase and rewrite mistakes.</li>
-<li><strong>Collect and check</strong>
+<li data-t="step6"><strong>Collect and check</strong>
 <pre><code>hwr pull
 hwr qc</code></pre>
 It reports empty cells or strokes that run into the next cell; fix them on the tablet and pull again.</li>
-<li><strong>Submit</strong>
+<li data-t="step7"><strong>Submit</strong>
 <pre><code>hwr contribute --consent &lt;issue number&gt;</code></pre>
 <code>--consent</code> is needed the first time only. A pull request with the anonymized pages opens
 automatically; after the checks pass, a maintainer merges it. Later, <code>hwr contribute</code> sends only new
 pages.</li>
 </ol>
 
-<h2>Consent in short</h2>
-<ul>
+<h2 data-t="consent-h">Consent in short</h2>
+<ul data-t="consent">
 <li>Submitted data is published under <b>CC BY 4.0</b>: anyone may use it (also commercially) with attribution.</li>
 <li>Write only the printed sentences, no personal information.</li>
 <li>Your GitHub account (issue and pull request author) is public.</li>
@@ -178,29 +180,29 @@ pages.</li>
 <li>You can withdraw, but published earlier versions and copies others downloaded cannot be recalled.</li>
 </ul>
 
-<h2>Withdraw</h2>
-<p>Use the <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=withdraw.yml">withdraw form</a>
+<h2 data-t="withdraw-h">Withdraw</h2>
+<p data-t="withdraw">Use the <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=withdraw.yml">withdraw form</a>
 from the <b>same GitHub account</b> as your join issue. Your writer id is in <code>hwr-data/writer.json</code> on
 your computer. Your data is removed from the next version of the dataset and of the Hugging Face mirror.</p>
 
-<h2>Use the data</h2>
-<ul>
+<h2 data-t="use-h">Use the data</h2>
+<ul data-t="use">
 <li>GitHub: <a href="https://github.com/lorancecall/rmpp-hwr-db">lorancecall/rmpp-hwr-db</a> (format:
 <a href="https://github.com/lorancecall/rmpp-hwr-db/blob/main/FORMAT.md">FORMAT.md</a>)</li>
 <li>Hugging Face: <a href="https://huggingface.co/datasets/lorancecall/rmpp-hwr-db">datasets/lorancecall/rmpp-hwr-db</a></li>
 <li>License: CC BY 4.0 (credit: "rmpp-hwr-db contributors")</li>
 </ul>
 
-<h2>Questions</h2>
-<h3>Does my handwriting have to be neat?</h3>
-<p>No. Your everyday handwriting helps most: the point is many different hands.</p>
-<h3>How much should I write?</h3>
-<p>One notebook (8 pages) is plenty; more is welcome. Every notebook has new sentences.</p>
-<h3>Does it improve my own model too?</h3>
-<p>Yes. Your pages stay on your computer, and <code>hwr train</code> uses them for a model tuned to your
+<h2 data-t="faq-h">Questions</h2>
+<h3 data-t="q1">Does my handwriting have to be neat?</h3>
+<p data-t="a1">No. Your everyday handwriting helps most: the point is many different hands.</p>
+<h3 data-t="q2">How much should I write?</h3>
+<p data-t="a2">One notebook (8 pages) is plenty; more is welcome. Every notebook has new sentences.</p>
+<h3 data-t="q3">Does it improve my own model too?</h3>
+<p data-t="a3">Yes. Your pages stay on your computer, and <code>hwr train</code> uses them for a model tuned to your
 handwriting. The public model is trained regularly on everyone's data.</p>
 
-<footer>rmpp-hwr-db · data CC BY 4.0 · <a href="https://github.com/lorancecall/rmpp-hwr-db">GitHub</a></footer>
+<footer data-t="footer">rmpp-hwr-db · data CC BY 4.0 · <a href="https://github.com/lorancecall/rmpp-hwr-db">GitHub</a></footer>
 </main>
 <script src="site.js"></script>
 </body>
