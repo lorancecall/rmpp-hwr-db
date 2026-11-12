@@ -19,18 +19,13 @@
 
   // English texts of the parts built here; a translation's "ui" replaces them key by key. {lang} and {n} are filled in.
   const EN = {
-    digitsOnly: "English + digits",
+    add: "+ Add your language",
     digits: "digits",
-    writers: "{n} writers", writers1: "1 writer",
-    notListed: "My language isn't listed", askForIt: "Ask for it",
-    pickFirst: "Pick the language you will write to see its join form.",
-    joinH: "Join in {lang}",
-    joinBtn: "Open the join form ({lang})",
-    joinHow: "The form opens on GitHub, with your language already set. Tick the five consent items and submit; " +
-      "a bot confirms in a minute and gives you the issue number for the next steps.",
-    next: "Then follow \"How to take part\" below.",
-    sendBtn: "Send sentences in {lang}",
-    sendWhy: "No tablet, or want to help more? Send proverbs or sentences for the practice notebooks.",
+    collectList: "Collecting sentences now:",
+    joinBtn: "Join in {lang}",
+    joinHow: "Opens a consent form on GitHub; a bot replies with your issue number.",
+    next: "How to take part ↓",
+    sendBtn: "Send sentences",
     reqH: "Ask for your language",
     reqIntro: "Search your language by name or two-letter code.",
     reqLabel: "Your language",
@@ -58,7 +53,6 @@
   // Current language (set by show()): code, its translation, number format, language names in it.
   let here = "en", UI = EN, nf = new Intl.NumberFormat("en"), hereNames = null;
   const T = (k, v) => String(UI[k] !== undefined ? UI[k] : EN[k]).replace(/\{(\w+)\}/g, (m, x) => (v && x in v ? v[x] : m));
-  const writers = n => (n === 1 ? T("writers1") : T("writers", { n: nf.format(n) }));
 
   // ISO 639-1 (scripts/languages.py) plus the variant zh-hant, for the "not listed" search.
   const ISO = ("aa ab ae af ak am an ar as av ay az ba be bg bi bm bn bo br bs ca ce ch co cr cs cu cv cy da de dv dz " +
@@ -117,6 +111,8 @@
       e.innerHTML = v !== undefined ? v : english0.page[e.dataset.t];
     }
     for (const e of document.querySelectorAll("[data-only]")) e.hidden = e.dataset.only !== c;
+    const nav = document.getElementById("langs");
+    if (nav) nav.setAttribute("aria-label", t.nav || "Languages");
     const tb = document.getElementById("by-lang");
     if (tb) tb.setAttribute("aria-label", t.byLang || "Writers per language");
     render();
@@ -124,7 +120,7 @@
 
   function render() {
     const per = (stats && stats.languages) || {};
-    start(per);
+    start();
     if (stats) numbers(stats);
     byLanguage(per);
     const n = document.getElementById("s-langs");
@@ -133,74 +129,63 @@
   }
 
   // Switch to language c (a supported language), remember it, and show its join panel.
-  function use(c, pick) {
+  function use(c) {
     store(SAVED, c);
-    try { history.replaceState(null, "", "?lang=" + c + (pick ? "#start" : location.hash)); } catch (e) {}
-    if (pick) chosen = c;
+    try { history.replaceState(null, "", "?lang=" + c); } catch (e) {}
+    chosen = undefined;
     if (c === here) { render(); return Promise.resolve(); }
     return translation(c).then(tr => show(c, c === "en" ? null : tr));
   }
 
   const supported = () => {
-    // English first, then by code: the cards keep their places when the page switches language
+    // English first, then by code: the menu keeps its order when the page switches language
     return Object.keys(langs).sort((a, b) => (a === "en" ? -1 : b === "en" ? 1 : a.localeCompare(b)));
   };
   const label = c => (langs[c] && (langs[c].native || langs[c].name)) || native(c);
 
 
-  // "Choose your language": one card per supported language, then "not listed". Choosing a language shows the page
-  // in it, with its join form (every [data-join] link of the page points to it); "not listed" shows the request search.
-  let cards = {}, other = null;
-  function start(per) {
-    const pick = document.getElementById("pick"), next = document.getElementById("pick-next");
-    if (!pick || !next) return;
-    cards = {};
-    pick.replaceChildren();
+  // The language menu at the top (supported languages in a fixed order, then "+ Add your language"): it switches the
+  // page; the join panel below is for the page's language.
+  function menu() {
+    const nav = document.getElementById("langs");
+    if (!nav) return;
+    nav.replaceChildren();
     for (const c of supported()) {
-      const L = langs[c];
-      const w = (per[c] && per[c].writers) || 0;
-      // under the native name: the name in the current language (or the English name for the current language)
-      const sub = c === "en" ? T("digitsOnly")
-        : local(c) !== label(c) ? local(c) : (L.name && L.name !== label(c) ? L.name : "");
-      const b = el("button", { type: "button", "aria-pressed": "false", lang: c },
-        el("span", { class: "native", text: label(c) }),
-        el("span", { class: "sub", text: [sub, w ? writers(w) : ""].filter(Boolean).join(" · ") }));
-      b.addEventListener("click", () => use(c, true));
-      cards[c] = b;
-      pick.append(b);
+      if (c === here && chosen === undefined) { nav.append(el("b", { lang: c, text: label(c) })); continue; }
+      const a = el("a", { href: "?lang=" + c, lang: c, text: label(c) });
+      a.addEventListener("click", e => { e.preventDefault(); use(c); });
+      nav.append(a);
     }
-    // languages collecting their first practice sentences (requested, not open yet), most sentences first
-    for (const c of collecting().sort((a, b) => texts(b) - texts(a))) {
-      const b = el("button", { type: "button", class: "collecting", "aria-pressed": "false", lang: c },
-        el("span", { class: "native", text: native(c) }),
-        el("span", { class: "sub", text: [local(c) !== native(c) ? local(c) : "",
-          T("collectSub", { n: nf.format(texts(c)), goal: GOAL() })].filter(Boolean).join(" · ") }));
-      b.addEventListener("click", () => choose(c));
-      cards[c] = b;
-      pick.append(b);
-    }
-    other = el("button", { type: "button", class: "other", "aria-pressed": "false" },
-      el("span", { class: "native", text: T("notListed") }), el("span", { class: "sub", text: T("askForIt") }));
-    other.addEventListener("click", () => choose(""));
-    pick.append(other);
+    const add = el("a", { href: "#request", text: T("add") });
+    if (chosen === "") add.className = "on";
+    add.addEventListener("click", toRequest);
+    nav.append(add);
+  }
+
+  // The panel under "Take part": join + send sentences for the page's language; the request search ("" chosen);
+  // or a language collecting sentences (its code chosen).
+  function start() {
+    const fallback = document.getElementById("pick");
+    if (fallback) fallback.remove();                    // links for browsers without JavaScript
     choose(chosen);
   }
 
   function choose(c) {
     chosen = c;
+    menu();
     const next = document.getElementById("pick-next");
-    for (const [k, b] of Object.entries(cards)) b.setAttribute("aria-pressed", String(k === c));
-    if (other) other.setAttribute("aria-pressed", String(c === ""));
-    // the practice command follows the chosen language, else the page's language
-    const cmd = document.getElementById("cmd-practice"), lc = c || here;
-    if (cmd && langs[lc]) {
-      const mix = (langs[lc].mix || [lc, "en", "digits"]).map(m => (m === "digits" ? T("digits") : local(m)));
-      cmd.textContent = `hwr practice --v2 --lang ${lc}    # ${mix.join(" + ")}`;
+    if (!next) return;
+    // the practice command and the join links follow the page's language
+    const cmd = document.getElementById("cmd-practice");
+    if (cmd && langs[here]) {
+      const mix = (langs[here].mix || [here, "en", "digits"]).map(m => (m === "digits" ? T("digits") : local(m)));
+      cmd.textContent = `hwr practice --v2 --lang ${here}    # ${mix.join(" + ")}`;
     }
-    if (langs[lc]) for (const a of document.querySelectorAll("a[data-join]")) a.href = NEW + `join-${lc}.yml`;
-    if (c === undefined) { next.replaceChildren(el("p", { class: "hint", text: T("pickFirst") })); return; }
+    if (langs[here]) for (const a of document.querySelectorAll("a[data-join]")) a.href = NEW + `join-${here}.yml`;
     if (c === "") { next.replaceChildren(request()); return; }
-    if (!langs[c]) { next.replaceChildren(collect(c)); return; }
+    if (c && !langs[c]) { next.replaceChildren(collect(c)); return; }
+    c = here;
+    if (!langs[c]) { next.replaceChildren(); return; }
     const name = label(c);
     const joinUrl = NEW + `join-${c}.yml`;
     // sentences for the practice texts, in this language (the same short form as a language request)
@@ -208,11 +193,8 @@
     const sendBtn = el("button", { type: "button", class: "btn secondary", text: T("sendBtn", { lang: name }) });
     sendBtn.addEventListener("click", () => { slot.replaceChildren(form(c, "", "send")); sendBtn.style.display = "none"; });
     next.replaceChildren(el("div", { class: "panel" },
-      el("h3", { text: T("joinH", { lang: name }) }),
-      el("p", {}, el("a", { class: "btn", href: joinUrl, text: T("joinBtn", { lang: name }) })),
-      el("p", { class: "small", text: T("joinHow") }),
-      el("p", { class: "small" }, el("a", { href: "#join", text: T("next") })),
-      el("p", { class: "small", text: T("sendWhy"), style: "margin-top:14px" }), el("p", {}, sendBtn), slot));
+      el("p", {}, el("a", { class: "btn", href: joinUrl, text: T("joinBtn", { lang: name }) }), sendBtn),
+      el("p", { class: "small" }, T("joinHow") + " ", el("a", { href: "#join", text: T("next") })), slot));
   }
 
   // A requested language that is not open yet: how far its sentences are, and the form to send more.
@@ -280,8 +262,16 @@
 
     const after = el("ol");
     for (const s of UI.after || EN.after) after.append(el("li", { text: s }));
+    // languages collecting their first sentences (requested, not open yet), most sentences first
+    const coll = collecting().sort((a, b) => texts(b) - texts(a));
+    const busy = coll.length ? el("p", { class: "small" }, T("collectList"), ...coll.map(c => {
+      const a = el("a", { href: "#start", lang: c, text: `${native(c)} ${T("collectSub", { n: nf.format(texts(c)), goal: GOAL() })}` });
+      a.addEventListener("click", e => { e.preventDefault(); choose(c); });
+      return el("span", {}, " ", a);
+    })) : null;
     return el("div", { class: "panel", id: "request" },
       el("h3", { text: T("reqH") }),
+      busy,
       el("p", { class: "small", text: T("reqIntro") }),
       el("label", { for: "req-lang", text: T("reqLabel") }), input, list, out,
       el("h3", { text: T("afterH"), style: "margin-top:18px" }), after,
@@ -398,7 +388,7 @@
       return /^zh-(hant|tw|hk|mo)/.test(t) ? "zh-hant" : t.split("-")[0];
     }).find(ok);
     const c = ok(asked) ? asked : ok(saved) ? saved : browser || "en";
-    chosen = location.hash === "#request" ? "" : ok(asked) || ok(saved) ? c : undefined;
+    chosen = location.hash === "#request" ? "" : undefined;
     const done = () => { if (location.hash === "#start" || location.hash === "#request") document.getElementById("start").scrollIntoView(); };
     if (c === "en") { show("en", null); done(); }
     else translation(c).then(tr => { show(c, tr); done(); });
