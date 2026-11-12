@@ -14,6 +14,9 @@ Issues come from the site's short forms (docs/site.js): "### Language" with "Nam
      Chinese: those pass on the local checks alone).
 
 When LanguageTool cannot be reached nothing is added; editing the issue runs the check again.
+
+A language that is not supported yet (not in languages.json) opens for joining once GOAL sentences have passed:
+the output ready=1 tells the workflow to register it (scripts/add_language.py: languages.json, its join form).
 The texts are CC BY 4.0 like the data: "sentence<TAB>issue number", so a line can be traced and removed.
 """
 import json
@@ -30,6 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import languages  # noqa: E402
 
 MIN_LEN, MAX_LEN, MAX_LINES = 3, 150, 30
+GOAL = 100                                           # sentences a new language collects before its join form opens
 LT_URL = "https://api.languagetool.org/v2"           # free public API, no key (limits: 20 requests a minute)
 LT_PREFERRED = {"en": "en-US", "pt": "pt-PT", "zh": "zh-CN", "ja": "ja-JP", "da": "da-DK", "uk": "uk-UA",
                 "el": "el-GR", "ca": "ca-ES", "gl": "gl-ES", "ga": "ga-IE", "km": "km-KH", "ta": "ta-IN",
@@ -184,9 +188,9 @@ def run(body, issue):
     lines = sentences_of(body)
     if not code or not languages.valid(code):
         return code, 0, "n/a", ("No valid language code was found, so the sentences were not checked. / 언어 코드를 "
-                                "찾지 못해 문장을 검사하지 않았습니다.")
+                                "찾지 못해 문장을 검사하지 않았습니다."), 0, False
     if not lines:
-        return code, 0, "n/a", ""
+        return code, 0, "n/a", "", len(existing(code)), False
     local = local_checks(code, lines)
     passed = [l for l, r in zip(lines, local) if not r]
     spell = spelling_checks(code, passed)
@@ -213,15 +217,27 @@ def run(body, issue):
     comment = (f"Thanks for the sentences! / 문장 고맙습니다!\n\n{note}\n\n| line | | result |\n|---|---|---|\n{rows}\n\n"
                "Checks: length, duplicates, personal data, script, offensive words (LDNOOBW), spelling and grammar "
                "(LanguageTool, for the languages it knows).")
-    return code, len(added), "no" if spell is None else "yes", comment
+    total = len(existing(code))
+    known = json.loads((ROOT / "languages.json").read_text(encoding="utf-8"))
+    ready = code not in known and total >= GOAL
+    if code not in known:
+        comment += (f"\n\n**{name}: {total} of {GOAL} sentences.** " +
+                    (f"That is enough: the join form for {name} opens now. / 문장이 다 모여 {name} 참여 신청을 시작합니다."
+                     if ready else
+                     f"When {GOAL} sentences have passed, the join form for {name} opens on the site. / 문장이 {GOAL}개 "
+                     f"모이면 사이트에서 {name} 참여 신청이 열립니다 (지금 {total}개)."))
+    return code, len(added), "no" if spell is None else "yes", comment, total, ready
 
 
 def main():
     if sys.argv[1:2] == ["check"]:
-        code, added, checked, comment = run(os.environ.get("ISSUE_BODY", ""), os.environ.get("ISSUE_NUMBER", "0"))
+        body = os.environ.get("ISSUE_BODY", "")
+        code, added, checked, comment, total, ready = run(body, os.environ.get("ISSUE_NUMBER", "0"))
+        _, name, native = languages.parse_request(body)
         (ROOT / "comment.md").write_text(comment, encoding="utf-8")
         with open(os.environ.get("GITHUB_OUTPUT", os.devnull), "a", encoding="utf-8") as f:
-            f.write(f"code={code or ''}\nadded={added}\nchecked={checked}\n")
+            f.write(f"code={code or ''}\nadded={added}\nchecked={checked}\ntotal={total}\nready={'1' if ready else ''}\n"
+                    f"name={name}\nnative={native}\n")
         print(comment)
     elif sys.argv[1:2] == ["try"] and len(sys.argv) == 4:
         lines = [l.strip() for l in Path(sys.argv[2]).read_text(encoding="utf-8").splitlines() if l.strip()]

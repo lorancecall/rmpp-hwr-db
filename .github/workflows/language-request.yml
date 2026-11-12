@@ -1,20 +1,16 @@
 name: Language request
 
 # An "Add a language" issue (the issue form, or a blank issue from the site's request form, which carries the
-# marker rmpp-hwr-db:language-request): read the language from the form and check its code (ISO 639-1, scripts/languages.py),
-# label the issue lang:<code>, reply with what rmpp-hwr can do for it (support tier), and for a new language open a
-# pull request that adds its languages.json entry and its page (scripts/add_language.py) for the maintainer to
-# review. Practice texts follow separately.
-# Needs Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests"; without it the
-# reply gives the command to run instead.
+# marker rmpp-hwr-db:language-request): read the language from the form and check its code (ISO 639-1,
+# scripts/languages.py), label the issue lang:<code> and reply with what rmpp-hwr can do for it (support tier).
+# A new language then collects practice sentences (sentences.yml checks those in this issue and later ones); at 100
+# sentences sentences.yml registers it (languages.json, join form) and closes its requests.
 on:
   issues:
     types: [opened, edited]
 
 permissions:
-  contents: write
   issues: write
-  pull-requests: write
 
 concurrency:
   group: language-request-${{ github.event.issue.number }}
@@ -33,48 +29,20 @@ jobs:
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
         run: python scripts/languages.py check-issue
-      - name: Pull request for a new language
-        id: pr
-        if: steps.check.outputs.new == '1'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CODE: ${{ steps.check.outputs.code }}
-          NAME: ${{ steps.check.outputs.name }}
-          NATIVE: ${{ steps.check.outputs.native }}
-          NUM: ${{ github.event.issue.number }}
-        run: |
-          branch="language/$CODE"
-          if git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
-            echo "url=(a pull request for $CODE exists already)" >> "$GITHUB_OUTPUT"; exit 0
-          fi
-          python scripts/add_language.py "$CODE" "$NAME" "$NATIVE"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$branch"
-          git add languages.json "docs/$CODE" .github/ISSUE_TEMPLATE
-          git commit -q -m "Add language $CODE ($NAME / $NATIVE)"
-          git push -q origin "$branch"
-          if url=$(gh pr create --head "$branch" --base main --title "Add language $CODE ($NAME / $NATIVE)" \
-                     --body "From #$NUM. Adds the languages.json entry, the page docs/$CODE/ (English text, to be translated), its join form .github/ISSUE_TEMPLATE/join-$CODE.yml and the language in the general join form. Practice texts come separately."); then
-            echo "url=$url" >> "$GITHUB_OUTPUT"
-          else
-            echo "url=(branch $branch pushed; open the pull request by hand)" >> "$GITHUB_OUTPUT"
-          fi
       - name: Label and reply
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CODE: ${{ steps.check.outputs.code }}
           COMMENT: ${{ steps.check.outputs.comment }}
-          PR: ${{ steps.pr.outputs.url }}
           NUM: ${{ github.event.issue.number }}
+          EVENT: ${{ github.event.action }}
         run: |
           gh issue edit "$NUM" -R "$GITHUB_REPOSITORY" --add-label language-request
           if [ -n "$CODE" ]; then
             gh label create "lang:$CODE" -R "$GITHUB_REPOSITORY" --color C5DEF5 2>/dev/null || true
             gh issue edit "$NUM" -R "$GITHUB_REPOSITORY" --add-label "lang:$CODE"
           fi
-          body="$COMMENT"
-          [ -n "$PR" ] && body="$body
-
-          Pull request: $PR"
-          gh issue comment "$NUM" -R "$GITHUB_REPOSITORY" --body "$body"
+          # reply once; an edit only gets a reply when the language could not be read before
+          if [ "$EVENT" = "opened" ] || [ -z "$CODE" ] || ! gh issue view "$NUM" -R "$GITHUB_REPOSITORY" --json comments -q '.comments[].body' | grep -q "Requested:\|supported already"; then
+            gh issue comment "$NUM" -R "$GITHUB_REPOSITORY" --body "$COMMENT"
+          fi

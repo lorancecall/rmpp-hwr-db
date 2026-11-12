@@ -35,7 +35,7 @@ jobs:
                 `Next, on your computer / 다음 단계 (PC에서):\n` +
                 "```\nhwr contribute --consent " + num + "\n```\n" +
                 `\`--consent ${num}\` is needed the first time only / 처음 한 번만 붙이면 됩니다. ` +
-                `Guide: https://lorancecall.github.io/rmpp-hwr-db/#join (한국어: https://lorancecall.github.io/rmpp-hwr-db/ko/#join)` });
+                `Guide: https://lorancecall.github.io/rmpp-hwr-db/#join (한국어: https://lorancecall.github.io/rmpp-hwr-db/?lang=ko#join)` });
             } else if (checked < 5) {
               await github.rest.issues.createComment({ ...context.repo, issue_number: num, body:
                 `All five consent items are needed to join (${checked} ticked): edit the issue to tick them. / ` +
