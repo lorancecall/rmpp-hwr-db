@@ -3,7 +3,7 @@ name: Language request
 # An "Add a language" issue (the issue form, or a blank issue from the site's request form, which carries the
 # marker rmpp-hwr-db:language-request): read the language from the form and check its code (ISO 639-1, scripts/languages.py),
 # label the issue lang:<code>, reply with what rmpp-hwr can do for it (support tier), and for a new language open a
-# pull request that adds its languages.json entry and its page (scripts/add_language.py) for the maintainer to
+# pull request that adds its languages.json entry and its join form (scripts/add_language.py) for the maintainer to
 # review. Practice texts follow separately.
 # Needs Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests"; without it the
 # reply gives the command to run instead.
@@ -55,7 +55,7 @@ jobs:
           git commit -q -m "Add language $CODE ($NAME / $NATIVE)"
           git push -q origin "$branch"
           if url=$(gh pr create --head "$branch" --base main --title "Add language $CODE ($NAME / $NATIVE)" \
-                     --body "From #$NUM. Adds the languages.json entry, the page docs/$CODE/ (English text, to be translated), its join form .github/ISSUE_TEMPLATE/join-$CODE.yml and the language in the general join form. Practice texts come separately."); then
+                     --body "From #$NUM. Adds the languages.json entry (the site shows the language; text in English until docs/i18n/$CODE.json translates it), its join form .github/ISSUE_TEMPLATE/join-$CODE.yml and the language in the general join form. Practice texts come separately."); then
             echo "url=$url" >> "$GITHUB_OUTPUT"
           else
             echo "url=(branch $branch pushed; open the pull request by hand)" >> "$GITHUB_OUTPUT"

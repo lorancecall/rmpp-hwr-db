@@ -97,12 +97,12 @@ def check_issue(body):
                                f"`{code}`는 ISO 639-1 코드가 아닙니다. 이슈를 고쳐 주세요."), False
     if code in known:
         return code, name, native, (f"`{code}` ({known[code].get('name')}) is supported already: "
-                                    f"https://lorancecall.github.io/rmpp-hwr-db/{known[code].get('page', '')} / "
+                                    f"https://lorancecall.github.io/rmpp-hwr-db/?lang={code} / "
                                     "이미 지원하는 언어입니다.\n\n" + tier(code)), False
-    return code, name, native, (f"Thanks! Requested: **{name} / {native}** (`{code}`). A pull request adds its page on the "
-                                "site and its join form; practice texts follow after review. When it is merged, the "
+    return code, name, native, (f"Thanks! Requested: **{name} / {native}** (`{code}`). A pull request adds it to the "
+                                "site with its join form; practice texts follow after review. When it is merged, the "
                                 "language shows up at https://lorancecall.github.io/rmpp-hwr-db/#start and you can join. "
-                                "Subscribe to this issue for updates. / 요청 언어의 사이트 페이지와 참여 양식을 PR로 "
+                                "Subscribe to this issue for updates. / 요청 언어를 사이트와 참여 양식에 PR로 "
                                 "추가하고, 연습 문장은 검토 후 이어집니다. 합쳐지면 사이트의 언어 목록에 나타나 참여할 수 "
                                 "있습니다.\n\n" + tier(code)), True
 

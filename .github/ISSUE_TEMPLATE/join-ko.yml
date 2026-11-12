@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         reMarkable Paper Pro로 쓴 손글씨(펜 획)를 **공개 데이터셋**에 기여하기 위한 신청입니다.
-        안내: https://lorancecall.github.io/rmpp-hwr-db/ko/
+        안내: https://lorancecall.github.io/rmpp-hwr-db/?lang=ko
 
         이 이슈는 **공개**됩니다. 이름, 연락처 같은 개인 정보는 적지 마세요.
         (This issue is public: do not write personal information.)
@@ -17,7 +17,7 @@ body:
       label: Language you write / 쓰는 언어
       description: |
         이 양식에서 정해집니다. 연습 노트는 한국어에 영어와 숫자를 섞습니다. 다른 언어라면 돌아가서 고르세요:
-        https://lorancecall.github.io/rmpp-hwr-db/ko/#start
+        https://lorancecall.github.io/rmpp-hwr-db/?lang=ko#start
       options:
         - "Korean / 한국어 (ko)"
       default: 0
