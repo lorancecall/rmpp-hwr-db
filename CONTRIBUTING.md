@@ -9,9 +9,11 @@ https://lorancecall.github.io/rmpp-hwr-db/ (translations in `docs/i18n/<code>.js
    (one issue form per language, `.github/ISSUE_TEMPLATE/join-<code>.yml`; the general
    [join form](https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join.yml) works too). A bot checks
    the answers and replies with the issue number to use.
-2. **Write**: install [rmpp-hwr](https://github.com/lorancecall/rmpp-hwr) on the tablet with
+2. **Write**: install [rmpp-hwr](https://github.com/lorancecall/rmpp-hwr) on the Paper Pro with
    [rmpp setup](https://github.com/lorancecall/rmpp-packages#install) and its `hwr` tool on the computer, get a practice notebook
-   (`hwr practice`), write it on the tablet, then `hwr pull` and `hwr qc`.
+   (`hwr practice`), write it on the Paper Pro, then `hwr pull` and `hwr qc`.
+   rmpp-hwr is made for and tested on the reMarkable Paper Pro with OS 3.29 only; other models are not supported
+   (see [rmpp-packages](https://github.com/lorancecall/rmpp-packages#readme)).
 3. **Send**: `hwr contribute --consent <issue number>` the first time, `hwr contribute` after that. It opens a
    pull request with the anonymized pages; `scripts/validate.py` checks it and a maintainer merges it.
 

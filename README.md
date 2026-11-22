@@ -9,16 +9,20 @@ apps, other tablets, research, teaching.
 
 The site walks you through it in every supported language (e.g. [한국어](https://lorancecall.github.io/rmpp-hwr-db/?lang=ko)).
 
-> It feeds [rmpp-hwr](https://github.com/lorancecall/rmpp-hwr), handwriting recognition on the tablet: one of the
+> It feeds [rmpp-hwr](https://github.com/lorancecall/rmpp-hwr), handwriting recognition on the reMarkable Paper Pro: one of the
 > **rmpp add-ons**, built on [rmpp-packages](https://github.com/lorancecall/rmpp-packages). Anyone else is welcome
 > to use the data too.
 
 ## How contributions work
 
-You write rmpp-hwr's practice pages on the tablet and send them with `hwr contribute` (it opens a pull request
+You write rmpp-hwr's practice pages on the Paper Pro and send them with `hwr contribute` (it opens a pull request
 with anonymized data: a random writer id, no names, accounts or devices); on the site anyone can also send
 practice sentences or ask for a new language. Everything is published under CC BY 4.0. Details:
 [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Writing needs a **reMarkable Paper Pro with OS 3.29**: rmpp-hwr is made for and tested on that only; other
+reMarkable models are not supported and their compatibility is not guaranteed. Following newer OS versions happens
+when there is time, and may not happen.
 
 ## Use the data
 

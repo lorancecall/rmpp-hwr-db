@@ -192,16 +192,17 @@ GitHub account for this project.</li>
 <h2 data-t="join-h" id="join">How to take part</h2>
 <ol class="steps">
 <li data-t="step1"><strong>What you need</strong>
-A reMarkable Paper Pro with developer mode on, a computer (Windows, macOS, Linux), a GitHub account and the
-<a href="https://cli.github.com/">GitHub CLI (gh)</a>. Log in once with <code>gh auth login</code>.</li>
+A reMarkable Paper Pro with <b>OS 3.29</b> and developer mode on, a computer (Windows, macOS, Linux), a GitHub account and the
+<a href="https://cli.github.com/">GitHub CLI (gh)</a>. Log in once with <code>gh auth login</code>.
+<em>rmpp-hwr is made for and tested on the Paper Pro with OS 3.29 only; other reMarkable models are not supported and their compatibility is not guaranteed. Following newer OS versions happens when there is time, and may not happen.</em></li>
 <li data-t="step2"><strong>Install rmpp-hwr</strong>
-On the tablet: run <a href="https://github.com/lorancecall/rmpp-packages#install">rmpp setup</a> from rmpp-packages
+On the Paper Pro: run <a href="https://github.com/lorancecall/rmpp-packages#install">rmpp setup</a> from rmpp-packages
 and tick <b>rmpp-hwr</b>. After a reMarkable OS update, open rmpp setup again and press <b>Restore</b>.
 On the computer, the <code>hwr</code> tool makes practice notebooks and sends your pages:
 <pre><code>git clone https://github.com/lorancecall/rmpp-hwr
 cd rmpp-hwr
 uv venv ../.venv &amp;&amp; uv pip install -p ../.venv -r collect/requirements.txt
-cp .env.example .env      # the tablet's address, your language (HWR_LANG)</code></pre>
+cp .env.example .env      # the Paper Pro's address, your language (HWR_LANG)</code></pre>
 Details: <a href="https://github.com/lorancecall/rmpp-hwr#install">rmpp-hwr</a>.</li>
 <li data-t="step3"><strong>Join (consent)</strong>
 Open the <a data-join href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=join-en.yml">join form for your language</a> (pick it at
@@ -209,14 +210,14 @@ Open the <a data-join href="https://github.com/lorancecall/rmpp-hwr-db/issues/ne
 <li data-t="step4"><strong>Get a practice notebook</strong>
 <pre><code id="cmd-practice">hwr practice --v2 --lang en    # English + digits
 hwr practice --v2 --lang ko    # Korean + English + digits</code></pre>
-A notebook <code>rmpp-practice-v2-…</code> (8 pages) appears in the tablet folder <code>hwr-db/&lt;language&gt;</code>.</li>
+A notebook <code>rmpp-practice-v2-…</code> (8 pages) appears in the Paper Pro folder <code>hwr-db/&lt;language&gt;</code>.</li>
 <li data-t="step5"><strong>Write</strong>
 Follow the line at the top of each page: one character per cell, not far outside it. Your <b>usual handwriting</b>
 helps most. Erase and rewrite mistakes.</li>
 <li data-t="step6"><strong>Collect and check</strong>
 <pre><code>hwr pull
 hwr qc</code></pre>
-It reports empty cells or strokes that run into the next cell; fix them on the tablet and pull again.</li>
+It reports empty cells or strokes that run into the next cell; fix them on the Paper Pro and pull again.</li>
 <li data-t="step7"><strong>Submit</strong>
 <pre><code>hwr contribute --consent &lt;issue number&gt;</code></pre>
 <code>--consent</code> is needed the first time only. A pull request with the anonymized pages opens
