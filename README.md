@@ -36,8 +36,3 @@ practice sentences or ask for a new language. Everything is published under CC B
 
 The data and the practice sentences are [CC BY 4.0](LICENSE). Please credit "rmpp-hwr-db contributors" and this
 repository.
-
----
-
-**한국어.** reMarkable 커뮤니티가 함께 만드는 공개 손글씨 데이터셋입니다. 태블릿에서 내 언어로 짧은 연습 노트를 쓰고 펜 획
-그대로 공유하면 누구나 자유롭게 쓸 수 있습니다(CC BY 4.0). 참여: [한국어 안내](https://lorancecall.github.io/rmpp-hwr-db/?lang=ko).
