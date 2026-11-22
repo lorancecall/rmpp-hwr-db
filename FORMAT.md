@@ -50,3 +50,22 @@ There are no timestamps, document ids, file names, device information or account
 
 The renderer used by rmpp-hwr (disc stamps every 0.5 px, pen width 4, height 48 for recognition) is in
 `rmpp-hwr/collect/collect.py` (`render`).
+
+## Practice sentences (`texts/<code>.tsv`)
+
+Sentences that people send through `[sentences]` issues and that pass the checks in `scripts/sentences.py`.
+rmpp-hwr's `tools/texts.py` reads these files (a local checkout, else the raw URL below) and turns each one into
+the practice topic `community`, so this format is a contract between the two repositories:
+
+- One file per language: `<code>` is the language code from `languages.json`, the same code as rmpp-hwr's
+  `collect/texts/<code>/` folder (`ko`, `en`, ...). A file exists once a language has its first sentence.
+- UTF-8, LF line ends, no BOM, no blank lines. Lines starting with `#` are comments; the first line names the
+  license.
+- Every other line is `sentence<TAB>issue`: the sentence, then the number of the issue it came from (so a line can
+  be traced and removed). Readers use these two columns and ignore any later ones.
+- A sentence is one line of 3-150 characters with no tab and no leading `#`, unique in its file.
+- Lines are appended in the order they pass; a line can also be removed (withdrawal), so don't rely on line
+  numbers.
+- Only the bot (`.github/workflows/sentences.yml`) writes these files.
+- License: CC BY 4.0, attribution "rmpp-hwr-db contributors".
+- URL: `https://raw.githubusercontent.com/lorancecall/rmpp-hwr-db/main/texts/<code>.tsv`
