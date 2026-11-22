@@ -17,7 +17,8 @@ When LanguageTool cannot be reached nothing is added; editing the issue runs the
 
 A language that is not supported yet (not in languages.json) opens for joining once GOAL sentences have passed:
 the output ready=1 tells the workflow to register it (scripts/add_language.py: languages.json, its join form).
-The texts are CC BY 4.0 like the data: "sentence<TAB>issue number", so a line can be traced and removed.
+The texts are CC BY 4.0 like the data: "sentence<TAB>issue number", so a line can be traced and removed (the
+file format is a contract with rmpp-hwr's tools/texts.py: see FORMAT.md, "Practice sentences").
 """
 import json
 import os
@@ -61,11 +62,16 @@ SCRIPTS = {
 NO_SPACES = {"ja", "zh", "zh-hant", "th", "lo", "km", "my"}   # profanity words are matched inside the text
 
 
+def clean(line):
+    """One line of texts/<code>.tsv: tabs and runs of spaces become one space (the tab separates the columns)."""
+    return re.sub(r"\s+", " ", line).strip()
+
+
 def sentences_of(body):
     text = languages.answer(body, "Practice sentences")
     out = []
     for line in text.splitlines():
-        line = re.sub(r"^\s*(?:[-*•]|\d{1,2}[.)])\s+", "", line).strip()   # list bullets and numbers
+        line = clean(re.sub(r"^\s*(?:[-*•]|\d{1,2}[.)])\s+", "", line))   # list bullets and numbers
         if line and not line.startswith("<!--"):
             out.append(line)
     return out[:MAX_LINES]
@@ -119,6 +125,8 @@ def local_checks(code, lines):
         reason = ""
         if not MIN_LEN <= len(line) <= MAX_LEN:
             reason = f"length {len(line)} (allowed {MIN_LEN}-{MAX_LEN} characters)"
+        elif line.startswith("#"):
+            reason = "starts with # (comment lines in the practice texts)"
         elif line in seen:
             reason = "repeated in this issue"
         elif line in have:
@@ -240,7 +248,7 @@ def main():
                     f"name={name}\nnative={native}\n")
         print(comment)
     elif sys.argv[1:2] == ["try"] and len(sys.argv) == 4:
-        lines = [l.strip() for l in Path(sys.argv[2]).read_text(encoding="utf-8").splitlines() if l.strip()]
+        lines = [clean(l) for l in Path(sys.argv[2]).read_text(encoding="utf-8").splitlines() if l.strip()]
         local = local_checks(sys.argv[3], lines)
         spell = iter(spelling_checks(sys.argv[3], [l for l, r in zip(lines, local) if not r]) or [])
         for l, r in zip(lines, local):
