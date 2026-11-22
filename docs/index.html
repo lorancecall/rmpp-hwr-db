@@ -5,84 +5,120 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>rmpp-hwr-db: join the handwriting dataset</title>
 <meta name="description" content="An open, multilingual handwriting dataset written by the reMarkable community: how to take part">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-/* black and white, like the tablet's paper display */
-:root { --bg: #ffffff; --fg: #111111; --muted: #666666; --line: #dddddd; --card: #ffffff; --accent: #111111; --code: #f3f3f3;
-  --picked: #f0f0f0; }
+/* Same look as the rmpp add-ons page (lorancecall.github.io/rmpp): black and white, like e-paper. */
+:root {
+  --bg: #ffffff; --fg: #0a0a0a; --muted: #6b6b6b; --line: #e3e3e3; --soft: #f5f5f5;
+  --inv-bg: #0a0a0a; --inv-fg: #ffffff;
+}
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #0f0f0f; --fg: #f2f2f2; --muted: #a0a0a0; --line: #303030; --card: #161616; --accent: #f2f2f2; --code: #1f1f1f;
-    --picked: #262626; }
+  :root:not([data-theme="light"]) {
+    --bg: #0a0a0a; --fg: #f2f2f2; --muted: #9a9a9a; --line: #2a2a2a; --soft: #161616;
+    --inv-bg: #f2f2f2; --inv-fg: #0a0a0a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0a0a0a; --fg: #f2f2f2; --muted: #9a9a9a; --line: #2a2a2a; --soft: #161616;
+  --inv-bg: #f2f2f2; --inv-fg: #0a0a0a;
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.7 -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif; }
-main { max-width: 760px; margin: 0 auto; padding: 40px 16px 80px; }
-h1 { font-size: 1.9rem; line-height: 1.3; margin: 0 0 8px; letter-spacing: -0.01em; }
-h2 { font-size: 1.3rem; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
-h3 { font-size: 1.05rem; margin: 24px 0 6px; }
-p.lead { color: var(--muted); margin: 0 0 24px; }
-a { color: var(--accent); }
-code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 0.92em; }
-code { background: var(--code); padding: 1px 5px; border-radius: 4px; }
-pre { background: var(--code); padding: 12px 14px; border-radius: 8px; overflow-x: auto; line-height: 1.5; }
-pre code { background: none; padding: 0; }
-ol.steps { padding-left: 0; list-style: none; counter-reset: s; }
-ol.steps > li { counter-increment: s; position: relative; padding: 14px 16px 14px 56px; margin: 0 0 12px;
-  background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
-ol.steps > li::before { content: counter(s); position: absolute; left: 16px; top: 14px; width: 26px; height: 26px;
-  border-radius: 50%; background: var(--accent); color: var(--bg); font-weight: 700; text-align: center; line-height: 26px; font-size: 0.9rem; }
-ol.steps > li > strong:first-child { display: block; margin-bottom: 2px; }
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 16px 0; }
-.stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
-.stat b { display: block; font-size: 1.5rem; font-variant-numeric: tabular-nums; }
-.stat span { color: var(--muted); font-size: 0.85rem; }
-.note { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; color: var(--muted); }
-.btn { display: inline-block; background: var(--accent); color: var(--bg); text-decoration: none; padding: 10px 18px;
-  border-radius: 8px; font-weight: 600; margin: 4px 8px 4px 0; }
-.btn { border: 1px solid var(--accent); font: inherit; font-weight: 600; cursor: pointer; line-height: 1.5; }
-.btn.secondary { background: transparent; color: var(--accent); }
-table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
-th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
-footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
-.langs { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 24px; font-size: 0.95rem; min-height: 1.7em; }
-.langs a { color: var(--muted); text-decoration: none; }
-.langs a:hover, .langs a.on { color: var(--fg); text-decoration: underline; }
-.langs b { color: var(--fg); border-bottom: 2px solid var(--fg); }
-.by-lang { margin: 4px 0 8px; }
-.by-lang .num { text-align: right; font-variant-numeric: tabular-nums; }
-.start { margin: 8px 0 28px; }
-.start h2 { border-top: 0; margin: 0 0 4px; padding-top: 0; }
-.start .hint { color: var(--muted); margin: 0 0 14px; font-size: 0.95rem; }
-.pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin: 0 0 16px; }
-.pick > a, .pick > button { display: block; text-align: left; font: inherit; color: var(--fg); cursor: pointer;
-  background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; text-decoration: none; }
-.pick > :hover { border-color: var(--accent); }
-.pick > :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.pick > [aria-pressed="true"] { border: 2px solid var(--accent); padding: 11px 13px;
-  background: var(--picked); }
-.pick .native { display: block; font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
-.pick .sub { display: block; color: var(--muted); font-size: 0.82rem; }
-.pick .other, .pick .collecting { border-style: dashed; }
-.pick .collecting .native { font-size: 1.05rem; }
-.pick .other .native { font-size: 1rem; }
-.panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 0 0 12px; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.65 "Inter", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--fg); text-underline-offset: 3px; }
+:lang(ko) { word-break: keep-all; }
+main { max-width: 860px; margin: 0 auto; padding: 28px 16px 72px; }
+
+/* top bar: back to the rmpp page, language menu (built by site.js) */
+.top { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; font-size: .88rem;
+  color: var(--muted); padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.top a { color: var(--muted); text-decoration: none; }
+.top a:hover { color: var(--fg); }
+.langs { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 12px; min-height: 1.65em; }
+.langs b { color: var(--fg); font-weight: 600; }
+.langs a.on { color: var(--fg); }
+
+.hero { padding: 56px 0 36px; }
+.hero h1 { font-size: clamp(2rem, 5.5vw, 3rem); line-height: 1.08; letter-spacing: -0.035em; margin: 0 0 16px; font-weight: 700; }
+.hero p.lead { font-size: 1.15rem; color: var(--muted); max-width: 40em; margin: 0; }
+
+section { padding: 40px 0; border-top: 1px solid var(--line); }
+h2 { font-size: 1.35rem; letter-spacing: -0.02em; margin: 0 0 10px; }
+h3 { font-size: 1rem; margin: 22px 0 4px; }
+.muted, .hint { color: var(--muted); }
+
+.btn { display: inline-block; padding: 11px 18px; border-radius: 8px; border: 1px solid var(--fg); text-decoration: none;
+  font: inherit; font-weight: 600; font-size: .95rem; line-height: 1.5; cursor: pointer; margin: 4px 8px 4px 0;
+  background: var(--inv-bg); color: var(--inv-fg); border-color: var(--inv-bg); }
+.btn.secondary { background: transparent; color: var(--fg); border-color: var(--fg); }
+.btn:hover { opacity: .85; }
+:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+/* take part: the join panel for the page's language (site.js) */
+.start { border-top: 0; padding-top: 0; }
+.start .hint { margin: 0 0 14px; font-size: .95rem; }
+.panel { border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 0 0 12px; }
 .panel h3 { margin: 0 0 6px; }
 .panel p { margin: 6px 0; }
-.panel .small { color: var(--muted); font-size: 0.88rem; }
+.panel .small { color: var(--muted); font-size: .9rem; }
 .panel ol { margin: 8px 0 0; padding-left: 22px; }
-.panel input[type="checkbox"] { margin: 6px 0 0; flex: none; accent-color: var(--accent); }
+.panel input[type="checkbox"] { margin: 6px 0 0; flex: none; accent-color: var(--fg); }
 .panel input[type="text"] { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
   padding: 9px 12px; width: 100%; max-width: 420px; }
-.panel input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.panel input[type="text"]:focus { outline: 2px solid var(--fg); outline-offset: 1px; border-color: var(--fg); }
 .panel label { display: block; font-weight: 600; margin: 10px 0 6px; }
+.pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 0 0 16px; }
+.pick > a { display: block; border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; text-decoration: none; }
+.pick > a:hover { border-color: var(--fg); }
+.pick .native { display: block; font-weight: 700; }
+.pick .sub { display: block; color: var(--muted); font-size: .88rem; }
+.pick .other { border-style: dashed; }
+
+/* numbers */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 0 0 16px; }
+.stat { background: var(--soft); border-radius: 10px; padding: 14px 16px; }
+.stat b { display: block; font-size: 1.6rem; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: .85rem; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.by-lang { margin: 0 0 16px; }
+.by-lang .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* how to take part: numbered timeline */
+ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 0; }
+ol.steps > li { counter-increment: s; position: relative; padding: 0 0 26px 46px; }
+ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--inv-bg); color: var(--inv-fg); display: grid; place-items: center; font-size: .82rem; font-weight: 700; }
+ol.steps > li:not(:last-child)::after { content: ""; position: absolute; left: 13.5px; top: 34px; bottom: 6px; width: 1px;
+  background: var(--line); }
+ol.steps > li > strong:first-child { display: block; margin: 2px 0 4px; }
+
+pre { background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto;
+  font: .85rem/1.55 "JetBrains Mono", ui-monospace, Consolas, monospace; margin: 8px 0; }
+code { font: .88em "JetBrains Mono", ui-monospace, Consolas, monospace; background: var(--soft); padding: 1px 5px; border-radius: 4px; }
+pre code { background: none; padding: 0; }
+ul { padding-left: 20px; }
+li { margin: 4px 0; }
+footer { margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--line); font-size: .85rem; color: var(--muted); }
+footer a { color: var(--muted); }
 </style>
 </head>
 <body>
 <main data-root="./">
-<nav class="langs" id="langs" aria-label="Languages"></nav>
+<div class="top">
+  <span data-t="back"><a href="https://lorancecall.github.io/rmpp/">← rmpp add-ons</a></span>
+  <nav class="langs" id="langs" aria-label="Languages"></nav>
+</div>
+
+<div class="hero">
 <h1 data-t="h1">An open handwriting dataset, written by the reMarkable community</h1>
 <p data-t="lead" class="lead">Write a short practice notebook on your reMarkable Paper Pro, in your own language, and share
 it as pen strokes. Everything is public (CC BY 4.0), so anyone can use it: handwriting recognition, note apps,
 other devices, research.</p>
+</div>
 
 <section class="start" id="start" aria-labelledby="start-h">
 <h2 data-t="start-h" id="start-h">Take part</h2>
@@ -96,8 +132,8 @@ with English and digits.</p>
 </div>
 <div id="pick-next" aria-live="polite"></div>
 </section>
-<p><a data-t="repo" class="btn secondary" href="https://github.com/lorancecall/rmpp-hwr-db">Repository</a></p>
 
+<section aria-label="Numbers">
 <div class="stats" id="stats" aria-live="polite">
   <div class="stat"><b id="s-writers">–</b><span data-t="stat-writers">writers</span></div>
   <div class="stat"><b id="s-pages">–</b><span data-t="stat-pages">pages</span></div>
@@ -107,7 +143,10 @@ with English and digits.</p>
   <div class="stat" data-only="ko" hidden><b id="s-hangul">–</b><span data-t="stat-hangul">distinct Hangul syllables</span></div>
 </div>
 <table class="by-lang" id="by-lang" aria-label="Writers per language"></table>
+<p><a data-t="repo" class="btn secondary" href="https://github.com/lorancecall/rmpp-hwr-db">Repository</a></p>
+</section>
 
+<section>
 <h2 data-t="collected-h">What is collected</h2>
 <p data-t="collected">Handwriting on printed practice pages, stored <b>as pen strokes</b> (coordinates, pressure, width). There are
 four kinds of pages:</p>
@@ -121,7 +160,9 @@ characters). Cell sizes change per row, for different writing sizes.</td></tr>
 </table>
 <p data-t="collected-2">Every cell and line carries the text that was printed, so the data works for character-level and line-level
 training.</p>
+</section>
 
+<section>
 <h2 data-t="languages-h" id="languages">Languages</h2>
 <p data-t="languages">Each practice notebook mixes <b>your language + English + digits</b> (English writers: English + digits), and the
 data of each language lives in its own folder <code>data/&lt;code&gt;/</code>. Supported languages are in
@@ -132,7 +173,9 @@ the top shows this page in that language.</p>
 <a href="#start">the top</a>).
 A new language first collects 100 practice sentences (sent by anyone, checked automatically); then its join form
 opens and it can be chosen on this page.</p>
+</section>
 
+<section>
 <h2 data-t="privacy-h">Privacy</h2>
 <ul data-t="privacy">
 <li>The data holds a <b>random writer id</b>, the practice template and the pen strokes. No names, accounts, device
@@ -143,7 +186,9 @@ phone numbers.</li>
 <li>The <b>GitHub account that opens the join issue and the pull request is public</b>. You can make a separate
 GitHub account for this project.</li>
 </ul>
+</section>
 
+<section>
 <h2 data-t="join-h" id="join">How to take part</h2>
 <ol class="steps">
 <li data-t="step1"><strong>What you need</strong>
@@ -178,7 +223,9 @@ It reports empty cells or strokes that run into the next cell; fix them on the t
 automatically; after the checks pass, a maintainer merges it. Later, <code>hwr contribute</code> sends only new
 pages.</li>
 </ol>
+</section>
 
+<section>
 <h2 data-t="consent-h">Consent in short</h2>
 <ul data-t="consent">
 <li>Submitted data is published under <b>CC BY 4.0</b>: anyone may use it (also commercially) with attribution.</li>
@@ -187,12 +234,16 @@ pages.</li>
 <li>Participants must be at least 14 years old.</li>
 <li>You can withdraw, but published earlier versions and copies others downloaded cannot be recalled.</li>
 </ul>
+</section>
 
+<section>
 <h2 data-t="withdraw-h">Withdraw</h2>
 <p data-t="withdraw">Use the <a href="https://github.com/lorancecall/rmpp-hwr-db/issues/new?template=withdraw.yml">withdraw form</a>
 from the <b>same GitHub account</b> as your join issue. Your writer id is in <code>hwr-data/writer.json</code> on
 your computer. Your data is removed from the next version of the dataset and of the Hugging Face mirror.</p>
+</section>
 
+<section>
 <h2 data-t="use-h">Use the data</h2>
 <ul data-t="use">
 <li>GitHub: <a href="https://github.com/lorancecall/rmpp-hwr-db">lorancecall/rmpp-hwr-db</a> (format:
@@ -200,7 +251,9 @@ your computer. Your data is removed from the next version of the dataset and of 
 <li>Hugging Face: <a href="https://huggingface.co/datasets/lorancecall/rmpp-hwr-db">datasets/lorancecall/rmpp-hwr-db</a></li>
 <li>License: CC BY 4.0 (credit: "rmpp-hwr-db contributors")</li>
 </ul>
+</section>
 
+<section>
 <h2 data-t="faq-h">Questions</h2>
 <h3 data-t="q1">Does my handwriting have to be neat?</h3>
 <p data-t="a1">No. Your everyday handwriting helps most: the point is many different hands.</p>
@@ -209,8 +262,10 @@ your computer. Your data is removed from the next version of the dataset and of 
 <h3 data-t="q3">Does it improve my own model too?</h3>
 <p data-t="a3">Yes. Your pages stay on your computer, and <code>hwr train</code> uses them for a model tuned to your
 handwriting. The public model is trained regularly on everyone's data.</p>
+</section>
 
-<footer data-t="footer">rmpp-hwr-db · data CC BY 4.0 · <a href="https://github.com/lorancecall/rmpp-hwr-db">GitHub</a></footer>
+<footer data-t="footer">rmpp-hwr-db · data CC BY 4.0 · Not affiliated with reMarkable AS. ·
+<a href="https://lorancecall.github.io/rmpp/">rmpp add-ons</a> · <a href="https://github.com/lorancecall/rmpp-hwr-db">GitHub</a></footer>
 </main>
 <script src="site.js"></script>
 </body>
