@@ -42,10 +42,11 @@
   "a2": "노트 하나(8페이지)면 충분합니다. 더 써 주시면 더 좋습니다. 매번 새 문장이 나옵니다.",
   "q3": "제 손글씨 모델도 좋아지나요?",
   "a3": "네. 쓴 페이지는 PC에 남아서 <code>hwr train</code>으로 내 글씨에 맞춘 모델을 만드는 데도 쓰입니다. 공개 모델은 모든 참여자 데이터로 주기적으로 학습해 배포합니다.",
-  "footer": "rmpp-hwr-db · 데이터 CC BY 4.0 · <a href=\"https://github.com/lorancecall/rmpp-hwr-db\">GitHub</a>",
+  "footer": "rmpp-hwr-db · 데이터 CC BY 4.0 · reMarkable AS와 관련 없는 개인 프로젝트입니다. ·\n<a href=\"https://lorancecall.github.io/rmpp/ko.html\">rmpp 애드온</a> · <a href=\"https://github.com/lorancecall/rmpp-hwr-db\">GitHub</a>",
   "stat-langs": "언어",
   "stat-hangul": "서로 다른 한글 음절",
-  "lead": "reMarkable Paper Pro로 내 언어의 짧은 연습 노트를 쓰고 펜 획 그대로 공유해 주세요. 모두 공개(CC BY 4.0)되어 손글씨 인식, 노트 앱, 다른 기기, 연구 등 누구나 어디에든 쓸 수 있습니다."
+  "lead": "reMarkable Paper Pro로 내 언어의 짧은 연습 노트를 쓰고 펜 획 그대로 공유해 주세요. 모두 공개(CC BY 4.0)되어 손글씨 인식, 노트 앱, 다른 기기, 연구 등 누구나 어디에든 쓸 수 있습니다.",
+  "back": "<a href=\"https://lorancecall.github.io/rmpp/ko.html\">← rmpp 애드온</a>"
  },
  "ui": {
   "add": "+ 언어 추가 요청",
