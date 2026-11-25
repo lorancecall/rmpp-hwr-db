@@ -41,7 +41,7 @@
   "q2": "몇 페이지나 써야 하나요?",
   "a2": "노트 하나(8페이지)면 충분합니다. 더 써 주시면 더 좋습니다. 매번 새 문장이 나옵니다.",
   "q3": "제 손글씨 모델도 좋아지나요?",
-  "a3": "네. 쓴 페이지는 PC에 남아서 <code>hwr train</code>으로 내 글씨에 맞춘 모델을 만드는 데도 쓰입니다. 공개 모델은 모든 참여자 데이터로 주기적으로 학습해 배포합니다.",
+  "a3": "네. 쓴 페이지는 PC에 남아서 <code>hwr train</code>으로 내 글씨에 맞춘 모델을 만드는 데도 쓰입니다. 공개 모델은 모든 참여자 데이터로 다시 학습해 배포합니다. 한국어는 아직 적은 데이터로 파인튜닝되어 참여자가 늘수록 좋아지고, 다른 언어는 손글씨가 모이면 파인튜닝합니다.",
   "footer": "rmpp-hwr-db · 데이터 CC BY 4.0 · reMarkable AS와 관련 없는 개인 프로젝트입니다 ·\n<a href=\"https://lorancecall.github.io/rmpp/ko.html\">rmpp 애드온</a> · <a href=\"https://github.com/lorancecall/rmpp-hwr-db\">GitHub</a>",
   "stat-langs": "언어",
   "stat-hangul": "서로 다른 한글 음절",

@@ -10,8 +10,9 @@ apps, other tablets, research, teaching.
 The site walks you through it in every supported language (e.g. [한국어](https://lorancecall.github.io/rmpp-hwr-db/?lang=ko)).
 
 > It feeds [rmpp-hwr](https://github.com/lorancecall/rmpp-hwr), handwriting recognition on the reMarkable Paper Pro: one of the
-> **rmpp add-ons**, built on [rmpp-packages](https://github.com/lorancecall/rmpp-packages). Anyone else is welcome
-> to use the data too.
+> **rmpp add-ons**, built on [rmpp-packages](https://github.com/lorancecall/rmpp-packages). Every language needs
+> writers: rmpp-hwr's Korean model is fine-tuned on this data, still a small set that gets better with each writer,
+> and the other languages have no handwriting here yet. Anyone else is welcome to use the data too.
 
 ## How contributions work
 
