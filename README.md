@@ -20,9 +20,8 @@ with anonymized data: a random writer id, no names, accounts or devices); on the
 practice sentences or ask for a new language. Everything is published under CC BY 4.0. Details:
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Writing needs a **reMarkable Paper Pro with OS 3.29**: rmpp-hwr is made for and tested on that only; other
-reMarkable models are not supported and their compatibility is not guaranteed. Following newer OS versions happens
-when there is time, and may not happen.
+Writing needs a **reMarkable Paper Pro with OS 3.29**: rmpp-hwr is made for and tested on that; other
+reMarkable models are not supported. Updates for newer OS versions may take some time to follow.
 
 ## Use the data
 
