@@ -122,7 +122,7 @@ other devices, research.</p>
 
 <section class="start" id="start" aria-labelledby="start-h">
 <h2 data-t="start-h" id="start-h">Take part</h2>
-<p data-t="hint" class="hint">You write the language chosen at the top of the page; each practice notebook mixes it
+<p data-t="hint" class="hint">You write in the language chosen at the top of the page; each practice notebook mixes it
 with English and digits.</p>
 <!-- without JavaScript: these links (site.js removes them and shows the panel for the page's language) -->
 <div class="pick" id="pick">
@@ -194,10 +194,10 @@ GitHub account for this project.</li>
 <li data-t="step1"><strong>What you need</strong>
 A reMarkable Paper Pro with <b>OS 3.29</b> and developer mode on, a computer (Windows, macOS, Linux), a GitHub account and the
 <a href="https://cli.github.com/">GitHub CLI (gh)</a>. Log in once with <code>gh auth login</code>.
-<em>rmpp-hwr is made for and tested on the Paper Pro with OS 3.29 only; other reMarkable models are not supported and their compatibility is not guaranteed. Following newer OS versions happens when there is time, and may not happen.</em></li>
+<em>rmpp-hwr is made for and tested on the Paper Pro with OS 3.29 only; other reMarkable models are not supported and their compatibility is not guaranteed. Updates for newer OS versions may take some time to follow.</em></li>
 <li data-t="step2"><strong>Install rmpp-hwr</strong>
 On the Paper Pro: run <a href="https://github.com/lorancecall/rmpp-packages#install">rmpp setup</a> from rmpp-packages
-and tick <b>rmpp-hwr</b>. After a reMarkable OS update, open rmpp setup again and press <b>Restore</b>.
+and tick <b>Handwriting recognition (beta)</b> (rmpp-hwr). After a reMarkable OS update, open rmpp setup again and press <b>Restore</b>.
 On the computer, the <code>hwr</code> tool makes practice notebooks and sends your pages:
 <pre><code>git clone https://github.com/lorancecall/rmpp-hwr
 cd rmpp-hwr
@@ -210,7 +210,8 @@ Open the <a data-join href="https://github.com/lorancecall/rmpp-hwr-db/issues/ne
 <li data-t="step4"><strong>Get a practice notebook</strong>
 <pre><code id="cmd-practice">hwr practice --v2 --lang en    # English + digits
 hwr practice --v2 --lang ko    # Korean + English + digits</code></pre>
-A notebook <code>rmpp-practice-v2-…</code> (8 pages) appears in the Paper Pro folder <code>hwr-db/&lt;language&gt;</code>.</li>
+A notebook <code>rmpp-practice-v2-…</code> (8 pages) appears in the Paper Pro folder <code>hwr-db/&lt;language&gt;</code>. You can also set the language once with
+<code>HWR_LANG</code> in <code>.env</code>.</li>
 <li data-t="step5"><strong>Write</strong>
 Follow the line at the top of each page: one character per cell, not far outside it. Your <b>usual handwriting</b>
 helps most. Erase and rewrite mistakes.</li>
@@ -262,10 +263,10 @@ your computer. Your data is removed from the next version of the dataset and of 
 <p data-t="a2">One notebook (8 pages) is plenty; more is welcome. Every notebook has new sentences.</p>
 <h3 data-t="q3">Does it improve my own model too?</h3>
 <p data-t="a3">Yes. Your pages stay on your computer, and <code>hwr train</code> uses them for a model tuned to your
-handwriting. The public model is trained regularly on everyone's data.</p>
+handwriting. The public model is trained regularly on everyone's data and released.</p>
 </section>
 
-<footer data-t="footer">rmpp-hwr-db · data CC BY 4.0 · Not affiliated with reMarkable AS. ·
+<footer data-t="footer">rmpp-hwr-db · data CC BY 4.0 · A personal project, not affiliated with reMarkable AS ·
 <a href="https://lorancecall.github.io/rmpp/">rmpp add-ons</a> · <a href="https://github.com/lorancecall/rmpp-hwr-db">GitHub</a></footer>
 </main>
 <script src="site.js"></script>
